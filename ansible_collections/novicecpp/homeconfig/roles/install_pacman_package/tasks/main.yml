@@ -1,0 +1,81 @@
+---
+- name: copy pacman config
+  ansible.builtin.copy:
+    src: etc/pacman.conf
+    dest: /etc/pacman.conf
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+
+- name: pacman upgrade
+  community.general.pacman:
+    update_cache: true
+    upgrade: true
+  become: true
+
+# 1) I do not know how to pass args to confirm pacman to remove
+#     iptables with iptables-nft
+# 2) need detect conflict package here, and logic how to solve that
+#     e.g. mutter vs mutter-performance
+#     maybe same as iptables-nft
+- name: pacman remove packages
+  community.general.pacman:
+    name: "{{ pacman_remove_packages }}"
+    state: absent
+    force: true
+  become: true
+
+- name: pacman install packages
+  community.general.pacman:
+    name: "{{ pacman_packages + pacman_pacstrap_packages }}"
+    state: present
+  become: true
+
+- name: Create the `aur_builder` user
+  become: yes
+  ansible.builtin.user:
+    name: aur_builder
+    create_home: yes
+
+- name: Allow the `aur_builder` user to run `sudo pacman` without a password
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/11-install-aur_builder
+    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+    create: yes
+    mode: 0644
+    validate: 'visudo -cf %s'
+  become: true
+
+- name: Install yay
+  kewlfft.aur.aur:
+    name: yay
+    use: makepkg
+    state: present
+    aur_only: true
+  become: true
+  become_user: aur_builder
+
+- name: Upgrade the system using yay, only act on AUR packages.
+  kewlfft.aur.aur:
+    upgrade: true
+    update_cache: true
+    use: yay
+    aur_only: true
+
+- name: import keys from url for aur
+  ansible.builtin.shell:
+    cmd: curl -sS {{ item }} | gpg --import -
+    executable: /bin/bash
+  loop:
+    # spotify
+    - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
+  become: true
+  become_user: aur_builder
+
+- name: install aur packages
+  kewlfft.aur.aur:
+    use: yay
+    name: "{{ aur_packages }}"
+  become: true
+  become_user: aur_builder
