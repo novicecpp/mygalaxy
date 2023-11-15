@@ -1,0 +1,16 @@
+---
+- name: ensure ~/.local/bin directory
+  file:
+    path: ~/.local/bin
+    mode: '0755'
+    recurse: yes
+    state: directory
+
+- name: ensure ~/.bash_completion.d dir
+  file:
+    path: ~/.bash_completion.d
+    state: directory
+
+- name: install k8s components
+  include_tasks: "{{ item }}.yml"
+  with_items: "{{ k8s_client_components }}"

@@ -1,0 +1,42 @@
+---
+- set_fact:
+    _filename: "{{ download_url | basename }}"
+
+- name: ensure ~/Downloads directory
+  file:
+    path: "{{ ansible_env.HOME }}/Downloads"
+    state: directory
+
+- name: "download {{ download_url }}"
+  get_url:
+    url: "{{ download_url }}"
+    dest: "{{ ansible_env.HOME }}/Downloads/{{ _filename }}"
+    checksum: "{{ checksum }}"
+
+- name: Create temporary file
+  tempfile:
+    state: directory
+    suffix: extract
+  register: extract_dir
+
+- name: "extract {{ _filename }}"
+  unarchive:
+    src: "~/Downloads/{{ _filename }}"
+    dest: "{{ extract_dir.path }}"
+    remote_src: true
+    extra_opts:
+      - "--strip-components={{ strip_components }}"
+  when: strip_components is defined
+
+- name: "extract {{ _filename }}"
+  unarchive:
+    src: "~/Downloads/{{ _filename }}"
+    dest: "{{ extract_dir.path }}"
+    remote_src: true
+  when: strip_component is undefined
+
+
+
+- name: "copy with rsync from {{ item.src }} to {{ item.dest }}"
+  shell: 'rsync -av {{ extract_dir.path }}/{{ item.src }} {{ item.dest }}'
+  loop: "{{ path }}"

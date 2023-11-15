@@ -1,0 +1,16 @@
+---
+- name: downloads kustomize
+  include_role:
+    name: download_and_extract
+  vars:
+    download_url: "{{ kustomize_download_url }}"
+    checksum: "{{ kustomize_download_checksum }}"
+    path:
+      - src: kustomize
+        dest: ~/.local/bin/
+
+- name: export kustomize bash completion
+  ansible.builtin.shell:
+    cmd: "./kustomize completion bash > ~/.bash_completion.d/kustomize.bash"
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}/.local/bin"

@@ -1,0 +1,16 @@
+---
+- name: downloads helm
+  include_role:
+    name: download_and_extract
+  vars:
+    download_url: "{{ helm_download_url }}"
+    checksum: "{{ helm_download_checksum }}"
+    path:
+      - src: linux-amd64/helm
+        dest: "{{ ansible_env.HOME }}/.local/bin/"
+
+- name: export helm bash completion
+  ansible.builtin.shell:
+    cmd: "./helm completion bash > ~/.bash_completion.d/helm.bash"
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}/.local/bin"

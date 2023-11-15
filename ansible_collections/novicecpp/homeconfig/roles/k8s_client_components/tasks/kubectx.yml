@@ -1,0 +1,17 @@
+---
+- name: downloads kubectx
+  include_role:
+    name: download_and_extract
+  vars:
+    download_url: "{{ kubectx_download_url }}"
+    checksum: "{{ kubectx_download_checksum }}"
+    strip_components: 1
+    path:
+      - src: kubectx
+        dest: "{{ ansible_env.HOME }}/.local/bin/"
+      - src: kubens
+        dest: "{{ ansible_env.HOME }}/.local/bin/"
+      - src: completion/kubectx.bash
+        dest: "{{ ansible_env.HOME }}/.bash_completion.d/"
+      - src: completion/kubens.bash
+        dest: "{{ ansible_env.HOME }}/.bash_completion.d/"

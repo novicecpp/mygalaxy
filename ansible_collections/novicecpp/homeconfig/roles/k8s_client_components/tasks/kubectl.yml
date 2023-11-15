@@ -1,0 +1,26 @@
+- name: install kubectl
+  tags: kubectl
+  include_role:
+    name: download_and_extract
+  vars:
+    download_url: "{{ kubectl_download_url }}"
+    checksum: "{{ kubectl_download_checksum }}"
+    path:
+      - src: kubernetes/client/bin/
+        dest: "{{ ansible_env.HOME}}/.local/bin"
+
+- name: export kubectl bash completion
+  ansible.builtin.shell:
+    cmd: "./kubectl completion bash > ~/.bash_completion.d/kubectl.bash"
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}/.local/bin"
+
+- name: install kubelogin
+  include_role:
+    name: download_and_extract
+  vars:
+    download_url: "{{ kubelogin_download_url }}"
+    checksum: "{{ kubelogin_download_checksum }}"
+    path:
+      - src: kubelogin
+        dest: "{{ ansible_env.HOME }}/.local/bin/kubectl-oidc_login"

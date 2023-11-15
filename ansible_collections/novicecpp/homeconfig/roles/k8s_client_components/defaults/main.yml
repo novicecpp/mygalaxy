@@ -1,0 +1,48 @@
+---
+k8s_client_downloads:
+  helm:
+    v3.13.1:
+      url: https://get.helm.sh/helm-v3.13.1-linux-amd64.tar.gz
+      checksum: sha256:98c363564d00afd0cc3088e8f830f2a0eeb5f28755b3d8c48df89866374a1ed0
+  kubectl:
+    v1.28.3:
+      url: https://dl.k8s.io/v1.28.3/kubernetes-client-linux-amd64.tar.gz
+      checksum: sha256:b7b44a3e8c2587e2d517ddc4d024f4263582758ff52fffab2e08276986914cb6
+  kubelogin:
+    v1.28.0:
+      url: https://github.com/int128/kubelogin/releases/download/v1.28.0/kubelogin_linux_amd64.zip
+      checksum: sha256:83282148fcc70ee32b46edb600c7e4232cbad02a56de6dc17e43e843fa55e89e
+  kubectx:
+    v0.9.5:
+      url: https://github.com/ahmetb/kubectx/archive/refs/tags/v0.9.5.tar.gz
+      checksum: sha256:c94392fba8dfc5c8075161246749ef71c18f45da82759084664eb96027970004
+  kustomize:
+    v5.2.1:
+      url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.2.1/kustomize_v5.2.1_linux_amd64.tar.gz
+      checksum: sha256:88346543206b889f9287c0b92c70708040ecd5aad54dd33019c4d6579cd24de8
+
+k8s_client_components:
+  - kubectl
+  - kubectx
+  - helm
+  - kustomize
+
+helm_version: v3.13.1
+helm_download_url: "{{ k8s_client_downloads['helm'][helm_version]['url'] }}"
+helm_download_checksum: "{{ k8s_client_downloads['helm'][helm_version]['checksum'] }}"
+
+kubectl_version: v1.28.3
+kubectl_download_url: "{{ k8s_client_downloads['kubectl'][kubectl_version]['url'] }}"
+kubectl_download_checksum: "{{ k8s_client_downloads['kubectl'][kubectl_version]['checksum'] }}"
+
+kubelogin_version: v1.28.0
+kubelogin_download_url: "{{ k8s_client_downloads['kubelogin'][kubelogin_version]['url'] }}"
+kubelogin_download_checksum: "{{ k8s_client_downloads['kubelogin'][kubelogin_version]['checksum'] }}"
+
+kubectx_version: v0.9.5
+kubectx_download_url: "{{ k8s_client_downloads['kubectx'][kubectx_version]['url'] }}"
+kubectx_download_checksum: "{{ k8s_client_downloads['kubectx'][kubectx_version]['checksum'] }}"
+
+kustomize_version: v5.2.1
+kustomize_download_url: "{{ k8s_client_downloads['kustomize'][kustomize_version]['url'] }}"
+kustomize_download_checksum: "{{ k8s_client_downloads['kustomize'][kustomize_version]['checksum'] }}"
