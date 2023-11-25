@@ -1,0 +1,66 @@
+---
+- name: ensure coredns directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  loop:
+    - /etc/sysusers.d
+    - /etc/tmpfiles.d
+    - /etc/coredns
+    - /opt/coredns/bin
+
+- name: downloads helm
+  include_role:
+    name: download_and_extract
+  vars:
+    download_url: "{{ coredns_download_url }}"
+    checksum: "{{ coredns_download_checksum }}"
+    path:
+      - src: coredns
+        dest: /opt/coredns/bin
+
+- name: Create temp dir
+  ansible.builtin.tempfile:
+    state: directory
+  register: tempdir
+
+- name: clone coredns/deployment repo
+  ansible.builtin.git:
+    repo: "{{ coredns_deployment_download_url }}"
+    dest: "{{ tempdir.path }}/deployment"
+    version: "{{ coredns_deployment_version }}"
+
+- set_fact:
+    coredns_systemd_src_dir: "{{ tempdir.path }}/deployment/systemd"
+
+- name: copy deployment config
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: '0644'
+    owner: root
+    group: root
+    remote_src: true
+  loop:
+    - src: "{{ coredns_systemd_src_dir }}/coredns.service"
+      dest: /etc/systemd/system/
+    - src: "{{ coredns_systemd_src_dir }}/coredns-sysusers.conf"
+      dest: /etc/sysusers.d/
+    - src: "{{ coredns_systemd_src_dir }}/coredns-tmpfiles.conf"
+      dest: /etc/tmpfiles.d/
+    - src: "{{ coredns_systemd_src_dir }}/coredns-log.conf"
+      dest: /etc/logrotate.d/
+
+- name: enable systemd unit
+  ansible.builtin.systemd_service:
+    name: coredns
+    enabled: true
+    daemon_reload: true
+
+- name: cleanup tempdir
+  ansible.builtin.file:
+    path: "{{ tempdir.path }}"
+    state: absent

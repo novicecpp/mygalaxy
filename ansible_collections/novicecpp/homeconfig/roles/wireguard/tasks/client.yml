@@ -1,0 +1,54 @@
+---
+- name: ensure /etc/wireguard directory
+  ansible.builtin.file:
+    path: /etc/wireguard
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+
+#- name: ensure /etc/wireguard/peers directory
+#  ansible.builtin.file:
+#    path: /etc/wireguard/peers
+#    state: directory
+#    mode: '0700'
+#    owner: root
+#    group: root
+
+- name: copy wireguard config
+  ansible.builtin.copy:
+    src: "{{ wg_config_dir }}/{{ wg_machine_name }}/{{ wg_interface }}.conf"
+    dest: /etc/wireguard/{{ wg_interface }}.conf
+    mode: '0600'
+    owner: root
+    group: root
+  become: true
+
+- set_fact:
+    wg_pass_abs_path: "{{ wg_pass_key_path }}/{{ wg_machine_name }}/{{ wg_interface }}"
+
+- name: copy wireguard private key
+  ansible.builtin.copy:
+    content: "{{ lookup('community.general.passwordstore', wg_pass_abs_path) }}"
+    dest: /etc/wireguard/{{ wg_interface }}.key
+    mode: '0600'
+    owner: root
+    group: root
+  become: true
+
+#- name: copy wireguard public key
+#  ansible.builtin.copy:
+#    src: "{{ wg_keys_dir }}/{{ item }}/{{ wg_interface }}.pub"
+#    dest: "/etc/wireguard/peers/{{ item }}.pub"
+#    mode: '0600'
+#    owner: root
+#    group: root
+#  become: true
+#  loop: "{{ wg_peer_names }}"
+
+- name: enable and restart wireguard
+  ansible.builtin.systemd:
+    name: wg-quick@{{ wg_interface }}
+    enabled: true
+    state: restarted
+  become: true

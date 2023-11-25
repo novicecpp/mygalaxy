@@ -1,0 +1,44 @@
+---
+- name: calculate coredns binary
+  ansible.builtin.shell:
+    cmd: |
+      sha256sum /opt/coredns/bin/coredns | awk '{printf $1}'
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: cmd_sha256sum_coredns_bin
+
+- name: install coredns
+  include_tasks: install.yml
+  when: cmd_sha256sum_coredns_bin.stdout != coredns_bin_checksum
+
+- name: ensure coredns config directory
+  ansible.builtin.file:
+    path: "/etc/systemd/system/coredns.service.d/"
+    owner: root
+    group: root
+    state: directory
+    mode: '0755'
+
+- name: copy coredns unit override
+  ansible.builtin.template:
+    src: etc/systemd/system/coredns.service.d/override.conf.j2
+    dest: /etc/systemd/system/coredns.service.d/override.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: unit daemon reload
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: copy coredns config
+  ansible.builtin.copy:
+    src: 'etc/coredns/'
+    dest: /etc/coredns/
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart coredns
+  tags:
+    - config
