@@ -1,0 +1,21 @@
+---
+- name: get sudo user
+  set_fact:
+    sudo_user: "{{ ansible_env.SUDO_USER }}"
+
+- name: Add ansible_user to
+  ansible.builtin.user:
+    name: "{{ sudo_user }}"
+    groups: libvirt
+    append: true
+
+- name: enable libvirt unit (socket)
+  ansible.builtin.systemd:
+    state: started
+    name: "{{ item }}"
+    enabled: true
+  loop:
+    - libvirtd.service
+    - libvirtd.socket
+    - libvirtd-ro.socket
+    - libvirtd-admin.socket

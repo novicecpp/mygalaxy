@@ -1,0 +1,4 @@
+---
+- name: apply generic config
+  include_tasks: "{{ item }}.yml"
+  loop: "{{ os_config_apply_configs }}"

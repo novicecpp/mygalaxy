@@ -1,0 +1,6 @@
+---
+- name: enable systemd-resolve now
+  ansible.builtin.systemd_service:
+    name: systemd-resolved
+    state: started
+    enabled: true
