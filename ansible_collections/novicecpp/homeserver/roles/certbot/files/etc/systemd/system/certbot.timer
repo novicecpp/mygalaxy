@@ -1,0 +1,10 @@
+[Unit]
+Description=Run certbot weekly
+After=network-online.target
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

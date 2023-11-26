@@ -14,7 +14,7 @@
 
 - name: downloads helm
   include_role:
-    name: download_and_extract
+    name: novicecpp.homeconfig.download_and_extract
   vars:
     download_url: "{{ coredns_download_url }}"
     checksum: "{{ coredns_download_checksum }}"

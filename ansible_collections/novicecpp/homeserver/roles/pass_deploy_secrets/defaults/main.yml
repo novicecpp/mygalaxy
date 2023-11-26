@@ -1,0 +1,8 @@
+---
+# Require
+# pass_deploy_secrets_secret_path:
+# pass_deploy_secrets_pass_path:
+
+
+pass_deploy_secrets_owner: root
+pass_deploy_secrets_group: root

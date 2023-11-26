@@ -1,0 +1,27 @@
+---
+- name: 'Check mandatory variables are defined'
+  assert:
+    that:
+      - certbot_secret_pass_path is defined
+
+- name: ensure gpg-agent is cache
+  set_fact:
+    tmp_cache_gpg_agent: "{{ lookup('community.general.passwordstore', 'probe') }}"
+
+- name: ensure secrets directory
+  ansible.builtin.file:
+    path: "{{ pass_deploy_secrets_secret_path | dirname }}"
+    state: directory
+    mode: '0700'
+    owner: "{{ pass_deploy_secrets_owner }}"
+    group: "{{ pass_deploy_secrets_group }}"
+    recurse: true
+
+- name: copy secrets
+  ansible.builtin.copy:
+    content: "{{ lookup('community.general.passwordstore', pass_deploy_secrets_pass_path) }}"
+    dest: "{{ pass_deploy_secrets_secret_path }}"
+    mode: '0600'
+    owner: "{{ pass_deploy_secrets_owner }}"
+    group: "{{ pass_deploy_secrets_group }}"
+  when:

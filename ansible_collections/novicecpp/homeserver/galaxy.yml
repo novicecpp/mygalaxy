@@ -1,0 +1,12 @@
+---
+namespace: "novicecpp"
+name: "homeserver"
+version: "0.1.0"
+readme: "README.md"
+authors:
+  - Thanayut Seethongchuen (thanayut.see@outlook.com)
+#dependencies:
+#  - "kewlfft.aur": ">=0.11.1"
+
+#license:
+#repository: "https://www.github.com/my_org/my_collection"
