@@ -1,0 +1,32 @@
+---
+- name: add docker signed key
+  ansible.builtin.get_url:
+    url: "https://download.docker.com/linux/debian/gpg"
+    dest: /etc/apt/trusted.gpg.d/docker.asc
+    mode: '0644'
+  become: true
+
+- name: docker repo
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/debian bookworm stable"
+    state: present
+  become: true
+
+- name: install docker-ce
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: latest
+    update_cache: true
+  become: true
+
+- name: start docker
+  systemd:
+    name: docker
+    state: started
+    enabled: true
+  become: true

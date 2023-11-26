@@ -1,0 +1,13 @@
+---
+- name: update package
+  ansible.builtin.apt:
+    upgrade: true
+    update_cache: true
+  become: true
+
+- name: install apt packages
+  ansible.builtin.apt:
+    name: '{{ apt_packages }}'
+    state: latest
+  when: apt_packages is defined
+  become: true
