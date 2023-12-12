@@ -49,6 +49,6 @@
 - name: enable and restart wireguard
   ansible.builtin.systemd:
     name: wg-quick@{{ wg_interface }}
-    enabled: true
+    enabled: "{{ enabled | default(true) }}"
     state: restarted
   become: true
