@@ -1,0 +1,11 @@
+---
+noisetorch_downloads:
+  noisetorch:
+    repo: https://github.com/noisetorch/NoiseTorch
+    version:
+      r1: 7563350d5b2cf6aa206e8132f82c36ab69d9b64c
+      r2: e5c4d3603428a1beb76939cba58f935cc2bac467
+
+noisetorch_version: r2
+noisetorch_repo: "{{ noisetorch_downloads['noisetorch']['repo'] }}"
+noisetorch_git_head: "{{ noisetorch_downloads['noisetorch']['version'][noisetorch_version] }}"

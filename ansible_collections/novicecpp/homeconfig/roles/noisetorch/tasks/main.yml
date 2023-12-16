@@ -1,0 +1,67 @@
+---
+- name: check if go command exists
+  ansible.builtin.shell:
+    cmd: go help
+  changed_when: false
+
+- name: Create temporary build directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: noisetorch
+  register: tmpdir
+  changed_when: false
+
+- name: clone noisetorch
+  ansible.builtin.git:
+    repo: "{{ noisetorch_repo }}"
+    dest: '{{ tmpdir.path }}'
+    single_branch: true
+    version: "{{ noisetorch_git_head }}"
+  changed_when: false
+
+- name: build
+  ansible.builtin.shell:
+    cmd: make
+    chdir: '{{ tmpdir.path }}'
+  changed_when: false
+
+- name: copy bin to ~/.local/bin
+  ansible.builtin.copy:
+    src: '{{ tmpdir.path }}/bin/noisetorch'
+    dest: ~/.local/bin/noisetorch
+    mode: '0755'
+    remote_src: true
+
+- name: set cap to executable
+  community.general.capabilities:
+    path: '{{ ansible_user_dir }}/.local/bin/noisetorch'
+    capability: CAP_SYS_RESOURCE=+ep
+    state: present
+  become: true
+
+- name: copy desktop file
+  ansible.builtin.copy:
+    src: '{{ tmpdir.path }}/assets/noisetorch.desktop'
+    dest: ~/.local/share/applications
+    mode: '0644'
+    remote_src: true
+
+- name: ensure local user icon dirs
+  ansible.builtin.file:
+    path: ~/.local/share/icons/hicolor/256x256/apps
+    state: directory
+    mode: '0755'
+
+- name: copy icon
+  ansible.builtin.copy:
+    src: '{{ tmpdir.path }}/assets/icon/noisetorch.png'
+    dest: ~/.local/share/icons/hicolor/256x256/apps
+    mode: '0644'
+    remote_src: true
+  notify: reload icon cache
+
+- name: cleanup tmpdir
+  ansible.builtin.file:
+    path: "{{ tmpdir.path }}"
+    state: absent
+  changed_when: false
