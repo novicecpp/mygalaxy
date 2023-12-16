@@ -1,0 +1,7 @@
+---
+- name: pacman install packages
+  community.general.pacman:
+    name:
+      - npm
+    state: present
+  become: true

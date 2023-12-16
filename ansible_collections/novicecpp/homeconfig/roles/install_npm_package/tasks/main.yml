@@ -1,0 +1,22 @@
+---
+- name: install npm
+  include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: npm set prefix
+  block:
+    - name: check if prefix is configure
+      ansible.builtin.shell: >
+        grep -- 'prefix=~/.local/' $HOME/.npmrc
+      changed_when: false
+      failed_when: false
+      register: cmd_ret
+    - name: set global path to local user
+      ansible.builtin.shell: >
+        npm config set prefix '~/.local/'
+      when: cmd_ret.rc != 0
+
+- name: install npm package
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+  loop: "{{ npm_packages }}"
