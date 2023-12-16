@@ -1,15 +1,16 @@
 ---
-- name: get sudo user
-  set_fact:
-    sudo_user: "{{ ansible_env.SUDO_USER }}"
+- name: install libvirt
+  include_task: '{{ ansible_distribution }}.yml'
 
-- name: Add ansible_user to
+- name: Add user to group
   ansible.builtin.user:
-    name: "{{ sudo_user }}"
+    name: "{{ ansible_user_id }}"
+    shell: /bin/bash
     groups: libvirt
     append: true
+  become: true
 
-- name: enable libvirt unit (socket)
+- name: enable libvirt unit
   ansible.builtin.systemd:
     state: started
     name: "{{ item }}"
@@ -19,3 +20,4 @@
     - libvirtd.socket
     - libvirtd-ro.socket
     - libvirtd-admin.socket
+  become: true

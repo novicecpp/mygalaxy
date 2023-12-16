@@ -1,3 +1,18 @@
 ---
 - name: install docker
   include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: Add user to group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /bin/bash
+    groups: docker
+    append: true
+  become: true
+
+- name: enable docker service
+  ansible.builtin.systemd:
+    name: "docker"
+    enabled: true
+    state: started
+  become: true

@@ -1,4 +1,12 @@
 ---
+- name: replace /etc/resolv.conf to systemd-resolved stub
+  ansible.builtin.file:
+    src: /run/systemd/resolve/stub-resolv.conf
+    dest: /etc/resolv.conf
+    force: true
+    state: link
+  become: true
+
 - name: copy systemd-resolved config
   ansible.builtin.copy:
     src: etc/systemd/resolved.conf

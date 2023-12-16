@@ -1,0 +1,8 @@
+---
+- name: install docker with pacman
+  community.general.pacman:
+    name:
+      - docker
+      - docker-buildx
+    state: present
+  become: true

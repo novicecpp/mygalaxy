@@ -1,0 +1,20 @@
+---
+- name: makes sure systemd-networkd is stop
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  loop:
+    - systemd-networkd
+  become: true
+
+- name: enable services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - gdm
+    - NetworkManager
+    - bluetooth
+  become: true

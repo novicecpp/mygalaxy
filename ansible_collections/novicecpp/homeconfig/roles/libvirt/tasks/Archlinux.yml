@@ -1,0 +1,10 @@
+---
+- name: install libvirt with pacman
+  community.general.pacman:
+    name:
+      - qemu-full # libvirt backend
+      - dnsmasq
+      - libvirt
+      - virt-manager
+    state: present
+  become: true
