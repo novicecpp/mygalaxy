@@ -7,6 +7,7 @@ authors:
   - Thanayut Seethongchuen (thanayut.see@outlook.com)
 dependencies:
   - "kewlfft.aur": ">=0.11.1"
+  - "community.general": ">=8.1.0"
 
 #license:
 #repository: "https://www.github.com/my_org/my_collection"

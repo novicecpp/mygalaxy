@@ -1,0 +1,7 @@
+---
+- name: pacman install packages
+  community.general.pacman:
+    name:
+      - flatpak
+    state: present
+  become: true

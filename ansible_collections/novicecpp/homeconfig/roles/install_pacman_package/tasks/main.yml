@@ -28,7 +28,7 @@
 
 - name: pacman install packages
   community.general.pacman:
-    name: "{{ pacman_packages + pacman_pacstrap_packages }}"
+    name: "{{ pacman_pacstrap_packages + pacman_packages + pacman_extra_packages }}"
     state: present
   become: true
 
@@ -77,5 +77,6 @@
   kewlfft.aur.aur:
     use: yay
     name: "{{ aur_packages }}"
+    upgrade: true
   become: true
   become_user: aur_builder

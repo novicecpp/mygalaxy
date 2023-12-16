@@ -1,0 +1,20 @@
+---
+- name: install flatpak
+  tags: flatpak
+  include_tasks: '{{ ansible_distribution }}.yml'
+
+- name: add flathub to flatpak repo
+  tags: flatpak
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    method: user
+
+- name: install flatpak package
+  tags: flatpak
+  community.general.flatpak:
+    name: '{{ item }}'
+    method: user
+    state: present
+  with_items: '{{ flatpak_packages }}'
