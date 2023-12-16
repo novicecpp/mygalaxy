@@ -1,0 +1,18 @@
+---
+- name: install rubygems
+  include_tasks: '{{ ansible_distribution }}.yml'
+
+- name: copy path export to /etc/profile.d
+  ansible.builtin.copy:
+    src: etc/profile.d/
+    dest: /etc/profile.d/
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+
+- name: install gems packages
+  community.general.gem:
+    name: "{{ item }}"
+    user_install: yes
+  loop: "{{ gems_packages }}"

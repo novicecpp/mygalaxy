@@ -1,0 +1,7 @@
+---
+- name: install gems
+  community.general.pacman:
+    name:
+      - rubygems
+    state: present
+  become: true
