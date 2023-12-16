@@ -1,0 +1,13 @@
+---
+- name: install python dependencies
+  include_tasks: '{{ ansible_distribution }}.yml'
+
+- name: upgrade pip package
+  community.general.pipx:
+    state: upgrade_all
+
+- name: install pip package
+  community.general.pipx:
+    name: "{{ item }}"
+    state: install
+  loop: "{{ pip_packages }}"

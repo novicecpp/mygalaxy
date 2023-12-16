@@ -1,0 +1,7 @@
+---
+- name: install pipx
+  community.general.pacman:
+    name:
+      - python-pipx
+    state: present
+  become: true

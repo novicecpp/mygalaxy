@@ -1,0 +1,7 @@
+---
+- name: install python header
+  tags: pip
+  become: yes
+  dnf:
+    name: python-devel
+    state: latest
