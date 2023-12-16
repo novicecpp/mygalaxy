@@ -3,3 +3,8 @@
   ansible.builtin.systemd_service:
     name: iptables
     state: restarted
+
+- name: restart systemd-resovled
+  ansible.builtin.systemd_service:
+    name: systemd-resovled
+    state: restarted
