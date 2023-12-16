@@ -77,6 +77,5 @@
   kewlfft.aur.aur:
     use: yay
     name: "{{ aur_packages }}"
-    upgrade: true
   become: true
   become_user: aur_builder
