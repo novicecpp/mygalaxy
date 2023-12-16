@@ -1,6 +1,7 @@
 ---
-- name: enable systemd-resolve now
+- name: enable systemd-timesync now
   ansible.builtin.systemd_service:
     name: systemd-timesyncd.service
     state: started
     enabled: true
+  become: true

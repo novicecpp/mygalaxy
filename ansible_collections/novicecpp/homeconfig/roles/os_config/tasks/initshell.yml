@@ -1,0 +1,9 @@
+---
+- name: copy profile.d
+  ansible.builtin.copy:
+    src: etc/profile.d/
+    dest: /etc/profile.d/
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
