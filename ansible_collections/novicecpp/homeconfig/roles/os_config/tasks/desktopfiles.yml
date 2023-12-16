@@ -1,0 +1,6 @@
+---
+- name: copy desktop files to ~/.local/share/applications/
+  ansible.builtin.copy:
+    src: dot-local/share/applications/
+    dest: ~/.local/share/applications/
+    mode: '0644'
