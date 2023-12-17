@@ -18,3 +18,7 @@
     - NetworkManager
     - bluetooth
   become: true
+
+- name: set-default
+  ansible.builtin.shell: systemctl set-default graphical.target
+  become: true
