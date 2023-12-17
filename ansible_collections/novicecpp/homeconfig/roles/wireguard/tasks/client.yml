@@ -46,9 +46,14 @@
 #  become: true
 #  loop: "{{ wg_peer_names }}"
 
+
+- set_fact:
+    should_enable: "{{ enabled | default(true) }}"
+
 - name: enable and restart wireguard
   ansible.builtin.systemd:
     name: wg-quick@{{ wg_interface }}
-    enabled: "{{ enabled | default(true) }}"
+    enabled:
     state: restarted
   become: true
+  when: should_enable

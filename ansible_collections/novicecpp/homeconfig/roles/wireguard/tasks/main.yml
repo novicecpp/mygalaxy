@@ -2,5 +2,6 @@
 - name: apply wireguard config
   include_tasks: client.yml
   vars:
-    wg_interface: "{{ item }}"
-  loop: "{{ wg_interface_names }}"
+    wg_interface: "{{ item.name }}"
+    enabled: "{{ item.enabled }}"
+  loop: "{{ wg_interfaces }}"
