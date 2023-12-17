@@ -1,0 +1,30 @@
+---
+- name: ensure ~/.local/bin directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - ~/.local/bin
+    - ~/.bash_completion.d
+
+- name: downloads argocd binary
+  ansible.builtin.get_url:
+    url: "{{ argocd_download_url }}"
+    dest: ~/.local/bin/argocd
+    checksum: "{{ argocd_download_checksum }}"
+
+- name: chmod
+  ansible.builtin.file:
+    dest: ~/.local/bin/argocd
+    mode: '0755'
+
+- name: get completion
+  ansible.builtin.shell: ~/.local/bin/argocd completion bash
+  register: shell_argocd_output
+  changed_when: false
+
+- name: copy completion to .bash_completion.d
+  ansible.builtin.copy:
+    content: "{{ shell_argocd_output.stdout }}"
+    dest: ~/.bash_completion.d/argocd
+    mode: '0644'

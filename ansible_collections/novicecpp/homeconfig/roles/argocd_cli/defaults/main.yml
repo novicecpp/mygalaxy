@@ -1,0 +1,13 @@
+---
+argocd_downloads:
+  argocd:
+    v2.9.0-rc2:
+      url: https://github.com/argoproj/argo-cd/releases/download/v2.9.0-rc2/argocd-linux-amd64
+      checksum: sha256:98c363564d00afd0cc3088e8f830f2a0eeb5f28755b3d8c48df89866374a1ed0
+    v2.9.3:
+      url: https://github.com/argoproj/argo-cd/releases/download/v2.9.3/argocd-linux-amd64
+      checksum: sha256:2f7d80558f9957fefb54fb19d83ec6fc6993eedf2f0ce113bff25cb2eb8a8d70
+
+argocd_version: v2.9.3
+argocd_download_url: "{{ argocd_downloads['argocd'][argocd_version]['url'] }}"
+argocd_download_checksum: "{{ argocd_downloads['argocd'][argocd_version]['checksum'] }}"
