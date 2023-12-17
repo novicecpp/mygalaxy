@@ -1,6 +1,6 @@
 ---
 - name: install libvirt
-  include_task: '{{ ansible_distribution }}.yml'
+  include_tasks: '{{ ansible_distribution }}.yml'
 
 - name: Add user to group
   ansible.builtin.user:
@@ -9,6 +9,9 @@
     groups: libvirt
     append: true
   become: true
+
+- set_fact:
+    should_start: "{{ start | default(false) }}"
 
 - name: enable libvirt unit
   ansible.builtin.systemd:
@@ -21,3 +24,4 @@
     - libvirtd-ro.socket
     - libvirtd-admin.socket
   become: true
+  when: should_start
