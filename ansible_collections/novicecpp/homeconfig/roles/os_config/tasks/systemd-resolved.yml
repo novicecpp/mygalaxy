@@ -14,7 +14,7 @@
     mode: '0644'
     owner: root
     group: root
-  notify: restart systemd-resovled
+  notify: restart systemd-resolved
   become: true
 
 - name: enable systemd-resolve now

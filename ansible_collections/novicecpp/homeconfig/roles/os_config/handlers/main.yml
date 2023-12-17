@@ -5,8 +5,8 @@
     state: restarted
   become: true
 
-- name: restart systemd-resovled
+- name: restart systemd-resolved
   ansible.builtin.systemd_service:
-    name: systemd-resovled
+    name: systemd-resolved
     state: restarted
   become: true
