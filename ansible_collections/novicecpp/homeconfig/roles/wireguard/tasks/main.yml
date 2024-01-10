@@ -1,4 +1,8 @@
 ---
+# variable
+# wg_interfaces:
+#   - name: wg-interface
+#     enabled: true/false
 - name: apply wireguard config
   include_tasks: client.yml
   vars:
