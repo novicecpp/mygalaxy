@@ -12,6 +12,8 @@
     url: "{{ download_url }}"
     dest: "{{ ansible_env.HOME }}/Downloads/{{ _filename }}"
     checksum: "{{ checksum }}"
+  retries: 3
+  delay: 5
 
 - name: Create temporary file
   tempfile:
