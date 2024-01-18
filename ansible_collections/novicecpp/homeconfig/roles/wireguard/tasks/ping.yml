@@ -1,0 +1,36 @@
+---
+#- set_fact:
+#    gateway_ip: "{{ ping_server }}"
+
+- name: ensure /opt/ping-wg directory
+  ansible.builtin.file:
+    path: /opt/ping-wg
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+
+# vars:
+#   gateway_ip:
+- name: install ping-wg systemd unit
+  ansible.builtin.template:
+    src: etc/systemd/system/ping-wg.service.j2
+    dest: /etc/systemd/system/ping-wg.service
+    mode: '0644'
+  become: true
+
+- name: install ping-wg.sh
+  ansible.builtin.copy:
+    src: opt/ping-wg/ping-wg.sh
+    dest: /opt/ping-wg/ping-wg.sh
+    mode: '0755'
+  become: true
+
+- name: reload daemon and start
+  ansible.builtin.systemd:
+    name: ping-wg.service
+    state: restarted
+    daemon_reload: true
+    enabled: true
+  become: true

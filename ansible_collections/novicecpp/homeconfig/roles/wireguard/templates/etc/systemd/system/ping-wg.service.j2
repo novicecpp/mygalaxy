@@ -1,0 +1,13 @@
+[Unit]
+Description=ping wg for awake tunnel after wg server restart
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+Environment="GATEWAY_IP={{ gateway_ip }}"
+ExecStart=/opt/ping-wg/ping-wg.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -46,10 +46,6 @@
 #  become: true
 #  loop: "{{ wg_peer_names }}"
 
-
-- set_fact:
-    should_enable: "{{ enabled | default(true) }}"
-
 - name: enable and restart wireguard
   ansible.builtin.systemd:
     name: wg-quick@{{ wg_interface }}
@@ -57,3 +53,7 @@
     state: restarted
   become: true
   when: should_enable
+
+- name: install ping-wg
+  include_tasks: ping.yml
+  when: ping_enable

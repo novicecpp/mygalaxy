@@ -1,4 +1,6 @@
 ---
+- name: install wireguard-tools
+  include_tasks: "dist/{{ ansible_distribution }}.yml"
 # variable
 # wg_interfaces:
 #   - name: wg-interface
@@ -7,5 +9,8 @@
   include_tasks: client.yml
   vars:
     wg_interface: "{{ item.name }}"
-    enabled: "{{ item.enabled }}"
+    should_enable: "{{ item.enabled | default(true) }}"
+    ping_enable: "{{ item.ping_enabled | default(false) }}"
+    gateway_ip: "{{ item.ping_server | default('127.0.0.1') }}"
+
   loop: "{{ wg_interfaces }}"
