@@ -8,9 +8,5 @@
 - name: apply wireguard config
   include_tasks: client.yml
   vars:
-    wg_interface: "{{ item.name }}"
-    should_enable: "{{ item.enabled | default(true) }}"
-    ping_enable: "{{ item.ping_enabled | default(false) }}"
-    gateway_ip: "{{ item.ping_server | default('127.0.0.1') }}"
-
+    task_vars: "{{ item }}"
   loop: "{{ wg_interfaces }}"

@@ -30,7 +30,7 @@
 - name: reload daemon and start
   ansible.builtin.systemd:
     name: ping-wg.service
-    state: restarted
+    state: started
     daemon_reload: true
     enabled: true
   become: true

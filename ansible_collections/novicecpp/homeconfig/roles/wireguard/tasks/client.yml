@@ -1,4 +1,10 @@
 ---
+- set_fact:
+    wg_interface: "{{ task_vars.name }}"
+    should_enable: "{{ task_vars.enabled | default(true) }}"
+    ping_enable: "{{ task_vars.ping_enabled | default(false) }}"
+    gateway_ip: "{{ task_vars.ping_server | default('127.0.0.1') }}"
+
 - name: ensure /etc/wireguard directory
   ansible.builtin.file:
     path: /etc/wireguard
@@ -22,6 +28,7 @@
     mode: '0600'
     owner: root
     group: root
+  notify: restart wireguard
   become: true
 
 - set_fact:
@@ -34,6 +41,7 @@
     mode: '0600'
     owner: root
     group: root
+  notify: restart wireguard
   become: true
 
 #- name: copy wireguard public key
@@ -46,11 +54,11 @@
 #  become: true
 #  loop: "{{ wg_peer_names }}"
 
-- name: enable and restart wireguard
+- name: enable wireguard
   ansible.builtin.systemd:
     name: wg-quick@{{ wg_interface }}
-    enabled:
-    state: restarted
+    enabled: true
+    state: started
   become: true
   when: should_enable
 
