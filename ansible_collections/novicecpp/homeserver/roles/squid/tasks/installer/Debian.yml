@@ -1,0 +1,6 @@
+---
+- name: install squid
+  ansible.builtin.apt:
+    name: squid
+    update_cache: true
+  become: true

@@ -1,0 +1,22 @@
+---
+- name: install squid
+  ansible.builtin.include_tasks: 'installer/{{ ansible_distribution }}.yml'
+
+- name: copy squid config
+  ansible.builtin.copy:
+    src: etc/squid/squid.conf
+    dest: /etc/squid/squid.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart squid
+  become: true
+  tags:
+    - config
+
+- name: enable squid
+  ansible.builtin.systemd_service:
+    name: squid
+    state: started
+    enabled: true
+  become: true
