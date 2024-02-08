@@ -12,7 +12,7 @@
     - /etc/coredns
     - /opt/coredns/bin
 
-- name: downloads helm
+- name: downloads coredns
   include_role:
     name: novicecpp.homeconfig.download_and_extract
   vars:
@@ -59,6 +59,9 @@
     name: coredns
     enabled: true
     daemon_reload: true
+
+- name: trigger systemd-sysusers and systemd-tmpfiles
+  shell: systemd-tmpfiles --create; systemd-sysusers;
 
 - name: cleanup tempdir
   ansible.builtin.file:
