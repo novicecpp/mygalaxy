@@ -42,3 +42,4 @@
   notify: restart coredns
   tags:
     - config
+    - always
