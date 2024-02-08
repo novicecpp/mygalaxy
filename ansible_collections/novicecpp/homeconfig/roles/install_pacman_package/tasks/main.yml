@@ -47,6 +47,13 @@
     validate: 'visudo -cf %s'
   become: true
 
+- name: pacman install yay deps
+  community.general.pacman:
+    name:
+      - fakeroot
+    state: present
+  become: true
+
 - name: Install yay
   kewlfft.aur.aur:
     name: yay
