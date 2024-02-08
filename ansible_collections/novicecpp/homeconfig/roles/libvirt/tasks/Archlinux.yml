@@ -6,5 +6,6 @@
       - dnsmasq
       - libvirt
       - virt-manager
+      - gnu-netcat # for virt-manager gui
     state: present
   become: true
