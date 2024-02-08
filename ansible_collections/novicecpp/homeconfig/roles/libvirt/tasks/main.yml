@@ -11,7 +11,7 @@
   become: true
 
 - set_fact:
-    should_start: "{{ start | default(false) }}"
+    should_start: "{{ start | default(true) }}"
 
 - name: enable libvirt unit
   ansible.builtin.systemd:
