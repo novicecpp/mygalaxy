@@ -7,5 +7,6 @@
       - libvirt
       - virt-manager
       - gnu-netcat # for virt-manager gui
+      - libxml2 # xmllint in network hook
     state: present
   become: true
