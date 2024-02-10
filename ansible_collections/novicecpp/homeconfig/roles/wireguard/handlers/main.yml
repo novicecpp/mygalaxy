@@ -1,6 +1,7 @@
 ---
 - name: restart wireguard
+  when: should_enable
   ansible.builtin.systemd:
-    name: wg-quick@{{ wg_interfaces }}
+    name: wg-quick@{{ wg_interface }}
     state: restarted
   become: true
