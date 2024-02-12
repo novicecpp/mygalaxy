@@ -1,13 +1,21 @@
 ---
-- name: install python dependencies
+- name: install pipx and python dependencies from os repo
   include_tasks: '{{ ansible_distribution }}.yml'
 
 - name: upgrade pip package
   community.general.pipx:
     state: upgrade_all
+    include_injected: true
 
-- name: install pip package
+- name: install pipx package
   community.general.pipx:
     name: "{{ item }}"
-    state: install
+    state: present
   loop: "{{ pip_packages }}"
+
+# wait until they release https://github.com/pypa/pipx/pull/1102 on arch
+- name: install pipx with injected packages
+  include_tasks: pipx_inject_packages.yml
+  vars:
+    pipx_package: "{{ item }}"
+  loop: "{{ pipx_packages_with_injects }}"

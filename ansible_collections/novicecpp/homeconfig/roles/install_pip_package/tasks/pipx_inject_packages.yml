@@ -1,0 +1,10 @@
+---
+- name: install pipx package
+  community.general.pipx:
+    name: "{{ pipx_package.package }}"
+    state: present
+- name: inject pipx package
+  community.general.pipx:
+    name: "{{ pipx_package.name }}"
+    state: inject
+    inject_packages: "{{ pipx_package.inject_packages | default([]) }}"
