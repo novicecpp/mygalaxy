@@ -8,10 +8,13 @@
     group: root
   become: true
 
-- name: pacman upgrade
+# keyring need to be upgrade for newly signed packages.
+- name: pacman update archlinux-keyring
   community.general.pacman:
+    name:
+      - archlinux-keyring
+    state: latest
     update_cache: true
-    upgrade: true
   become: true
 
 # 1) I do not know how to pass args to confirm pacman to remove
@@ -32,18 +35,31 @@
     state: present
   become: true
 
+# need to upgrade later due to deps conflict (or packages move from core to extra)
+- name: pacman upgrade
+  community.general.pacman:
+    upgrade: true
+  become: true
+
+- name: pacman install aur deps
+  community.general.pacman:
+    name:
+      - fakeroot
+    state: present
+  become: true
+
 - name: Create the `aur_builder` user
-  become: yes
   ansible.builtin.user:
     name: aur_builder
     create_home: yes
+  become: true
 
 - name: Allow the `aur_builder` user to run `sudo pacman` without a password
   ansible.builtin.lineinfile:
     path: /etc/sudoers.d/11-install-aur_builder
     line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
     create: yes
-    mode: 0644
+    mode: '0644'
     validate: 'visudo -cf %s'
   become: true
 
