@@ -1,7 +1,4 @@
 ---
-#- set_fact:
-#    gateway_ip: "{{ ping_server }}"
-
 - name: ensure /opt/ping-wg directory
   ansible.builtin.file:
     path: /opt/ping-wg
@@ -11,8 +8,6 @@
     mode: '0755'
   become: true
 
-# vars:
-#   gateway_ip:
 - name: install ping-wg systemd unit
   ansible.builtin.template:
     src: etc/systemd/system/ping-wg.service.j2
@@ -26,6 +21,26 @@
     dest: /opt/ping-wg/ping-wg.sh
     mode: '0755'
   become: true
+  notify: restart ping-wg
+
+- name: ensure wg-quick unit override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/wg-quick@{{ wg_interface }}.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: true
+
+- name: copy wg-quick unit override
+  ansible.builtin.copy:
+    src: etc/systemd/system/wg-quick@.service.d/override.conf
+    dest: /etc/systemd/system/wg-quick@{{ wg_interface }}.service.d/override.conf
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: restart wireguard
 
 - name: reload daemon and start
   ansible.builtin.systemd:

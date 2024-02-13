@@ -4,4 +4,11 @@
   ansible.builtin.systemd:
     name: wg-quick@{{ wg_interface }}
     state: restarted
+    daemon_reload: true
+  become: true
+
+- name: restart ping-wg
+  ansible.builtin.systemd:
+    name: ping-wg.service
+    state: restarted
   become: true

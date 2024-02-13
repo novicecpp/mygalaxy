@@ -1,3 +1,5 @@
+# The ping-wg.sh will exit with error if it cannot ping.
+# Need to set `PartOf=ping-wg.sh` systemd unit override to `wg-quick@<ifname>.service` to trigger restarting `wg-quick@<ifname>.service` when this unit restart.
 [Unit]
 Description=ping wg for awake tunnel after wg server restart
 Wants=network-online.target

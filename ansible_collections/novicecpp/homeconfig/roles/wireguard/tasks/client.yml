@@ -64,4 +64,6 @@
 
 - name: install ping-wg
   include_tasks: ping.yml
+  vars:
+    task_vars: "{{ task_vars }}"
   when: ping_enable
