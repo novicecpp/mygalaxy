@@ -1,0 +1,7 @@
+---
+- name: restart libvirt
+  ansible.builtin.systemd:
+    state: restarted
+    name: libvirtd.service
+  become: true
+  when: should_start

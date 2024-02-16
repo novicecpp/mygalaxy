@@ -1,24 +1,9 @@
 #! /bin/bash
 network_name=$1
-operation=$2
-state=$3
-if [[ "$4" == '-' ]]; then
-    stdinstr=$(cat -)
-    #`grep -o -P '.+"\K[^"]+'` grep  everything between qoute, ignore anything before \K
-    interface=$(echo "$stdinstr" | xmllint --xpath '/hookData/network/bridge/@name' - | grep -o -P '.+"\K[^"]+')
-    domain=$(echo "$stdinstr" |  xmllint --xpath '/hookData/network/domain/@name' - | grep -o -P '.+"\K[^"]+')
-    ipaddr=$(echo "$stdinstr" |  xmllint --xpath '/hookData/network/ip/@address' - | grep -o -P '.+"\K[^"]+')
-else
-    exit 0
-fi
 
-if [[ $network_name == 'virbr-td' ]]; then
-    if [[ $operation == 'started' && $state == 'begin' ]]; then
-        resolvectl dns $interface $ipaddr;
-        resolvectl domain $interface "~${domain}";
-        resolvectl dnsovertls $interface no;
-    elif [[ $operation == 'stopped' && $state == 'end' ]]; then
-        resolvectl revert $interface;
-    fi
-
+# run custom hook
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+hook_script_name="${SCRIPT_DIR}/${network_name}"
+if [[ -f "${hook_script_name}" ]]; then
+    "${hook_script_name}" "$@"
 fi

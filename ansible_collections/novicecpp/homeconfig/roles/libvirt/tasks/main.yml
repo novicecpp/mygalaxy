@@ -10,14 +10,18 @@
     append: true
   become: true
 
-- name: ensure hooks directory
+- name: ensure hooks and hooks/network.d directory
   ansible.builtin.file:
-    path: /etc/libvirt/hooks/
+    path: /etc/libvirt/hooks/network.d
     state: directory
     mode: '0755'
   become: true
 
-- name: install network hooks
+- set_fact:
+    should_start: "{{ start | default(true) }}"
+    install_custom_network_hook: "{{ libvirt_custom_network_hook | default(false) }}"
+
+- name: install main network hooks
   ansible.builtin.copy:
     src: etc/libvirt/hooks/network
     dest: /etc/libvirt/hooks/network
@@ -25,9 +29,19 @@
     owner: root
     group: root
   become: true
+  when: install_custom_network_hook
+  notify: restart libvirt
 
-- set_fact:
-    should_start: "{{ start | default(true) }}"
+- name: install custom network hooks
+  ansible.builtin.copy:
+    src: etc/libvirt/hooks/network.d/
+    dest: /etc/libvirt/hooks/network.d/
+    mode: '0755'
+    owner: root
+    group: root
+  become: true
+  when: install_custom_network_hook
+  notify: restart libvirt
 
 - name: enable libvirt unit
   ansible.builtin.systemd:
