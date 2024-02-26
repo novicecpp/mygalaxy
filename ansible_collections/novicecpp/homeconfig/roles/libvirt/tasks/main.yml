@@ -32,10 +32,10 @@
   when: install_custom_network_hook
   notify: restart libvirt
 
-- name: install custom network hooks
+- name: install extra network script for network hooks
   ansible.builtin.copy:
-    src: etc/libvirt/hooks/network.d/
-    dest: /etc/libvirt/hooks/network.d/
+    src: etc/libvirt/hooks/net_scripts/
+    dest: /etc/libvirt/hooks/net_scripts/
     mode: '0755'
     owner: root
     group: root
