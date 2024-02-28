@@ -3,7 +3,7 @@ network_name=$1
 
 # run custom hook
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-hook_script_name="${SCRIPT_DIR}/net_scripts/${network_name}"
+hook_script_name="${SCRIPT_DIR}/net_scripts/${network_name}.sh"
 if [[ -f "${hook_script_name}" ]]; then
     "${hook_script_name}" "$@"
 fi
