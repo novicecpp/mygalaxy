@@ -19,3 +19,4 @@
   vars:
     pipx_package: "{{ item }}"
   loop: "{{ pipx_packages_with_injects }}"
+  when: pipx_packages_with_injects
