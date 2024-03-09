@@ -14,7 +14,6 @@
     group: root
   become: true
 
-
 - set_fact:
     wg_config_path: "{{ wg_config_dir }}/{{ wg_machine_name }}/{{ wg_interface }}.conf"
 
@@ -52,7 +51,6 @@
   notify: restart wireguard
   become: true
 
-
 #- name: copy wireguard public key
 #  ansible.builtin.copy:
 #    src: "{{ wg_keys_dir }}/{{ item }}/{{ wg_interface }}.pub"
@@ -63,10 +61,27 @@
 #  become: true
 #  loop: "{{ wg_peer_names }}"
 
+- name: ensure scripts dir
+  ansible.builtin.file:
+    path: /etc/wireguard/scripts/
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+  become: true
+
+- name: copy pre-postup.sh script
+  ansible.builtin.copy:
+    src: etc/wireguard/scripts/pre-postup.sh
+    dest: /etc/wireguard/scripts/pre-postup.sh
+    mode: '0700'
+    owner: root
+    group: root
+  become: true
+
 - name: enable wireguard
   ansible.builtin.systemd:
     name: wg-quick@{{ wg_interface }}
-    enabled: true
     state: started
   become: true
   when: should_enable
