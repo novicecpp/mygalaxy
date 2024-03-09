@@ -4,7 +4,7 @@ set -euo pipefail
 
 interface=$1 # e.g., `wg-internal`
 mode=$2 # `client` or `server`
-dns_endpoint=$3 # kaguya.novicecpp.net:22441
+dns_endpoint=${3:-} # kaguya.novicecpp.net:22441
 configdir=/etc/wireguard/${interface}.d/
 if [[ ${mode} == client ]]; then
     hostname=$(echo $dns_endpoint | cut -d: -f1)
