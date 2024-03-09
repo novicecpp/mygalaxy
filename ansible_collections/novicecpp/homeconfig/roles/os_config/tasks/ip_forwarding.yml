@@ -1,0 +1,12 @@
+---
+- name: copy sysctl ipforwarding rules
+  ansible.builtin.copy:
+    src: etc/sysctl.d/00-ip_forwarding.conf
+    dest: /etc/sysctl.d/00-ip_forwarding.conf
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+
+- name: reload sysctl
+  ansible.builtin.shell: sysctl --system
