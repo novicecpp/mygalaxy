@@ -1,0 +1,7 @@
+---
+- name: install autossh
+  community.general.pacman:
+    name:
+      - autossh
+    state: present
+  become: true

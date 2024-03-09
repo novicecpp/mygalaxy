@@ -3,6 +3,9 @@
     var_hostname: "{{ autossh_tunnel_hostname }}"
     var_remote_port: "{{ autossh_tunnel_remote_port }}"
 
+- name: install autossh
+  include_tasks: "{{ ansible_distribution }}.yml"
+
 - name: add autossh user
   ansible.builtin.user:
     name: autossh
