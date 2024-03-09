@@ -1,0 +1,10 @@
+Host autossh_tunnel
+    HostName {{ var_hostname }}
+    Port 22
+    IdentityFile /home/autossh/.ssh/ssh_privkey
+    RequestTTY no
+    SessionType none
+    RemoteForward {{ var_remote_port }} localhost:22
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    ExitOnForwardFailure yes

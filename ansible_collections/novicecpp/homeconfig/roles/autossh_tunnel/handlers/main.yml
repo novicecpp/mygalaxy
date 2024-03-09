@@ -1,0 +1,7 @@
+---
+- name: restart unit
+  ansible.builtin.systemd_service:
+    name: autossh
+    daemon_reload: true
+    state: restarted
+  become: true
