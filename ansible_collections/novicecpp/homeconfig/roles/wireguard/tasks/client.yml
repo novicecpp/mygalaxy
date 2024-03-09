@@ -5,30 +5,38 @@
     ping_enable: "{{ task_vars.ping_enabled | default(false) }}"
     gateway_ip: "{{ task_vars.ping_server | default('127.0.0.1') }}"
 
-- name: ensure /etc/wireguard directory
+- name: ensure /etc/wireguard/{{ wg_interface }}.d directory
   ansible.builtin.file:
-    path: /etc/wireguard
+    path: /etc/wireguard/{{ wg_interface }}.d
     state: directory
     mode: '0700'
     owner: root
     group: root
+  become: true
 
-#- name: ensure /etc/wireguard/peers directory
-#  ansible.builtin.file:
-#    path: /etc/wireguard/peers
-#    state: directory
-#    mode: '0700'
-#    owner: root
-#    group: root
+
+- set_fact:
+    wg_config_path: "{{ wg_config_dir }}/{{ wg_machine_name }}/{{ wg_interface }}.conf"
 
 - name: copy wireguard config
   ansible.builtin.copy:
-    src: "{{ wg_config_dir }}/{{ wg_machine_name }}/{{ wg_interface }}.conf"
+    src: "{{ wg_config_path }}"
     dest: /etc/wireguard/{{ wg_interface }}.conf
     mode: '0600'
     owner: root
     group: root
   notify: restart wireguard
+  become: true
+
+
+# need for pre-postup.sh script
+- name: copy peer pubkey
+  ansible.builtin.copy:
+    content: "{{ lookup('ansible.builtin.ini', 'PublicKey', section='Peer', file=wg_config_path) }}"
+    dest: /etc/wireguard/{{ wg_interface }}.d/peer.pub
+    mode: '0600'
+    owner: root
+    group: root
   become: true
 
 - set_fact:
@@ -37,12 +45,13 @@
 - name: copy wireguard private key
   ansible.builtin.copy:
     content: "{{ lookup('community.general.passwordstore', wg_pass_abs_path) }}"
-    dest: /etc/wireguard/{{ wg_interface }}.key
+    dest: /etc/wireguard/{{ wg_interface }}.d/{{ wg_interface }}.key
     mode: '0600'
     owner: root
     group: root
   notify: restart wireguard
   become: true
+
 
 #- name: copy wireguard public key
 #  ansible.builtin.copy:

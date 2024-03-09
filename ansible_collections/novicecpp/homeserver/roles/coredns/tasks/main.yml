@@ -12,7 +12,7 @@
   include_tasks: install.yml
   when: cmd_sha256sum_coredns_bin.stdout != coredns_bin_checksum
 
-- name: ensure coredns config directory
+- name: ensure unit override directory
   ansible.builtin.file:
     path: "/etc/systemd/system/coredns.service.d/"
     owner: root

@@ -10,3 +10,21 @@
   vars:
     task_vars: "{{ item }}"
   loop: "{{ wg_interfaces }}"
+
+- name: ensure scripts dir
+  ansible.builtin.file:
+    path: /etc/wireguard/scripts/
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+  become: true
+
+- name: copy pre-postup.sh script
+  ansible.builtin.copy:
+    src: etc/wireguard/scripts/pre-postup.sh
+    dest: /etc/wireguard/scripts/pre-postup.sh
+    mode: '0700'
+    owner: root
+    group: root
+  become: true
