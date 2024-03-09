@@ -1,0 +1,7 @@
+---
+- name: get service facts
+  ansible.builtin.service_facts:
+
+- name: run networkd-dispatcher.yaml
+  include_tasks: networkd-dispatcher.yml
+  when: ansible_facts.services['systemd-networkd.service']['state'] == 'running'

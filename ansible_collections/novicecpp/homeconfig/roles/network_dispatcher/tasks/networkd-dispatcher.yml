@@ -1,0 +1,24 @@
+---
+- name: install networkd-dispatcher
+  ansible.builtin.apt:
+    name: 'networkd-dispatcher'
+    state: latest
+  become: true
+
+- name: enable networkd-dispatcher now
+  ansible.builtin.systemd_service:
+    name: networkd-dispatcher.service
+    state: started
+    enabled: true
+  become: true
+
+- name: copy config
+  ansible.builtin.copy:
+    src: etc/networkd-dispatcher/{{ item }}.d/
+    dest: /etc/networkd-dispatcher/{{ item }}.d/
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - routable
+  become: true
