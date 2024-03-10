@@ -1,0 +1,69 @@
+---
+- set_fact:
+    wg_interface: "{{ task_vars.name }}"
+    should_enable: "{{ task_vars.enabled | default(true) }}"
+    ping_enable: "{{ task_vars.ping_enabled | default(false) }}"
+    gateway_ip: "{{ task_vars.ping_server | default('127.0.0.1') }}"
+    mode: "{{ task_vars.mode | default('client') }}"
+
+- name: ensure /etc/wireguard/{{ wg_interface }}.d directory
+  ansible.builtin.file:
+    path: /etc/wireguard/{{ wg_interface }}.d
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+  become: true
+
+- set_fact:
+    wg_config_path: "{{ wg_config_dir }}/{{ wg_machine_name }}/{{ wg_interface }}.conf"
+
+- name: copy wireguard config
+  ansible.builtin.copy:
+    src: "{{ wg_config_path }}"
+    dest: /etc/wireguard/{{ wg_interface }}.conf
+    mode: '0600'
+    owner: root
+    group: root
+  notify: restart wireguard
+  become: true
+
+
+- set_fact:
+    wg_pass_abs_path: "{{ wg_pass_key_path }}/{{ wg_machine_name }}/{{ wg_interface }}"
+
+- name: copy wireguard private key
+  ansible.builtin.copy:
+    content: "{{ lookup('community.general.passwordstore', wg_pass_abs_path) }}"
+    dest: /etc/wireguard/{{ wg_interface }}.d/{{ wg_interface }}.key
+    mode: '0600'
+    owner: root
+    group: root
+  notify: restart wireguard
+  become: true
+
+#- name: copy wireguard public key
+#  ansible.builtin.copy:
+#    src: "{{ wg_keys_dir }}/{{ item }}/{{ wg_interface }}.pub"
+#    dest: "/etc/wireguard/peers/{{ item }}.pub"
+#    mode: '0600'
+#    owner: root
+#    group: root
+#  become: true
+#  loop: "{{ wg_peer_names }}"
+
+- name: per mode
+  include_tasks: "{{ mode }}.yml"
+
+- name: enable wireguard
+  ansible.builtin.systemd:
+    name: wg-quick@{{ wg_interface }}
+    state: started
+  become: true
+  when: should_enable
+
+- name: install ping-wg
+  include_tasks: ping.yml
+  vars:
+    task_vars: "{{ task_vars }}"
+  when: ping_enable
