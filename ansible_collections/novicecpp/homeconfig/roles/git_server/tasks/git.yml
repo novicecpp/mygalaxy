@@ -8,6 +8,28 @@
     password_lock: true
   become: true
 
+- name: ensure git-shell-commands  dir
+  ansible.builtin.file:
+    path: "/home/{{ git_server_username }}/git-shell-commands"
+    state: directory
+    owner: "{{ git_server_username }}"
+    group: "{{ git_server_username }}"
+    mode: '0700'
+  become: true
+
+- name: copy no-interactive-login script
+  ansible.builtin.copy:
+    content: |
+      #! /bin/sh
+      printf '%s\n' "Hi $USER! You've successfully authenticated, but I do not"
+      printf '%s\n' "provide interactive shell access."
+      exit 128
+    dest: "/home/{{ git_server_username }}/git-shell-commands/no-interactive-login"
+    owner: "{{ git_server_username }}"
+    group: "{{ git_server_username }}"
+    mode: '0700'
+  become: true
+
 - name: ensure .ssh dir
   ansible.builtin.file:
     path: "/home/{{ git_server_username }}/.ssh"
@@ -15,6 +37,7 @@
     owner: "{{ git_server_username }}"
     group: "{{ git_server_username }}"
     mode: '0700'
+  become: true
 
 - name: create authorized_keys
   ansible.builtin.file:
@@ -23,6 +46,7 @@
     owner: "{{ git_server_username }}"
     group: "{{ git_server_username }}"
     mode: '0600'
+  become: true
 
 - name: add ssh public key
   ansible.builtin.lineinfile:
@@ -31,3 +55,4 @@
     line: >
       no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ item }}
   loop: "{{ git_server_pubkeys }}"
+  become: true
