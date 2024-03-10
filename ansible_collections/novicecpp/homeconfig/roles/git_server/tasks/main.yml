@@ -1,0 +1,9 @@
+---
+- name: create git server with user
+  include_tasks: git.yml
+  vars:
+    git_server_username: "{{ toloop.git_server_username }}"
+    git_server_pubkeys: "{{ toloop.git_server_pubkeys }}"
+  loop: "{{ git_server_creates }}"
+  loop_control:
+    loop_var: toloop

@@ -1,0 +1,33 @@
+---
+- name: add user "{{ git_server_username }}"
+  ansible.builtin.user:
+    name: "{{ git_server_username }}"
+    create_home: true
+    home: "/home/{{ git_server_username }}"
+    shell: /bin/bash
+    password_lock: true
+  become: true
+
+- name: ensure .ssh dir
+  ansible.builtin.file:
+    path: "/home/{{ git_server_username }}/.ssh"
+    state: directory
+    owner: "{{ git_server_username }}"
+    group: "{{ git_server_username }}"
+    mode: '0700'
+
+- name: create authorized_keys
+  ansible.builtin.file:
+    path: "/home/{{ git_server_username }}/.ssh/authorized_keys"
+    state: touch
+    owner: "{{ git_server_username }}"
+    group: "{{ git_server_username }}"
+    mode: '0600'
+
+- name: add ssh public key
+  ansible.builtin.lineinfile:
+    path: /home/{{ git_server_username }}/.ssh/authorized_keys
+    search_string: "{{ item.split()[1] }}"
+    line: >
+      no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ item }}
+  loop: "{{ git_server_pubkeys }}"
