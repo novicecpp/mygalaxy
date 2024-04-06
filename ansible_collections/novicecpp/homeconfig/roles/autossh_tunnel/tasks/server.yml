@@ -1,0 +1,29 @@
+---
+- name: add autossh user
+  ansible.builtin.user:
+    name: autossh
+    create_home: true
+    home: /home/autossh
+    shell: /bin/sh  # server side need to be actual shell. otherwise, we cannot login.
+    password_lock: true
+  become: true
+
+- name: ensure .ssh dir
+  ansible.builtin.file:
+    path: /home/autossh/.ssh
+    state: directory
+    owner: autossh
+    group: autossh
+    mode: '0700'
+  become: true
+
+# key is usually in autossh/<servername>/
+- name: copy authorized_keys
+  ansible.builtin.copy:
+    content: >
+      {{ lookup('community.general.passwordstore', autossh_tunnel_authorized_keys_path, returnall=true) }}
+    dest: "/home/autossh/.ssh/authorized_keys"
+    owner: autossh
+    group: autossh
+    mode: '0600'
+  become: true

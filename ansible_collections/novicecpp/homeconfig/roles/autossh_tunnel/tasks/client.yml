@@ -1,0 +1,73 @@
+---
+- set_fact:
+    var_hostname: "{{ autossh_tunnel_hostname }}"
+    var_remote_port: "{{ autossh_tunnel_remote_port }}"
+
+- name: install autossh
+  include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: add autossh user
+  ansible.builtin.user:
+    name: autossh
+    create_home: true
+    home: /home/autossh
+    shell: /usr/bin/nologin
+    password_lock: true
+  become: true
+
+- name: ensure .ssh dir
+  ansible.builtin.file:
+    path: /home/autossh/.ssh
+    state: directory
+    owner: autossh
+    group: autossh
+    mode: '0700'
+  become: true
+
+- name: copy ssh config
+  ansible.builtin.template:
+    src: dot-ssh/ssh_config_autossh
+    dest: /home/autossh/.ssh/ssh_config_autossh
+    owner: autossh
+    group: autossh
+    mode: '0600'
+  become: true
+
+# key is usually in autossh/<servername>/
+- name: copy private key
+  ansible.builtin.copy:
+    content: >
+      {{ lookup('community.general.passwordstore', autossh_tunnel_passkey_path, returnall=true) }}
+    dest: "/home/autossh/.ssh/ssh_privkey"
+    owner: autossh
+    group: autossh
+    mode: '0600'
+  become: true
+
+- name: copy known_hosts
+  ansible.builtin.copy:
+    content: >
+      {{ lookup('community.general.passwordstore', autossh_tunnel_known_hosts_passkey_path, returnall=true) }}
+    dest: /home/autossh/.ssh/known_hosts
+    owner: autossh
+    group: autossh
+    mode: '0600'
+  become: true
+
+- name: copy unit
+  ansible.builtin.copy:
+    src: etc/systemd/system/autossh.service
+    dest: /etc/systemd/system/
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: restart unit
+
+- name: enable unit
+  ansible.builtin.systemd_service:
+    name: autossh
+    daemon_reload: true
+    state: started
+    enabled: true
+  become: true
