@@ -32,6 +32,8 @@
 - name: pacman install packages
   community.general.pacman:
     name: "{{ pacman_pacstrap_packages + pacman_packages + pacman_extra_packages }}"
+    reason: explicit
+    reason_for: all
     state: present
   become: true
 
