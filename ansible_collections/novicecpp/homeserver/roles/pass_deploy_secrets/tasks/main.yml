@@ -17,11 +17,24 @@
     group: "{{ pass_deploy_secrets_group }}"
     recurse: true
 
+- name: get secret
+  set_fact:
+    pass_deploy_secrets_value: "{{ lookup('community.general.passwordstore', pass_deploy_secrets_pass_path) }}"
+
 - name: copy secrets
   ansible.builtin.copy:
-    content: "{{ lookup('community.general.passwordstore', pass_deploy_secrets_pass_path) }}"
+    content: "{{ pass_deploy_secrets_value }}"
     dest: "{{ pass_deploy_secrets_secret_path }}"
     mode: '0600'
     owner: "{{ pass_deploy_secrets_owner }}"
     group: "{{ pass_deploy_secrets_group }}"
-  when:
+  when: pass_deploy_secrets_value is undefined
+
+- name: copy secrets
+  ansible.builtin.copy:
+    content: "{{ pass_deploy_secrets_pass_template | replace('###pass_deploy_secrets_value###', pass_deploy_secrets_value) }}"
+    dest: "{{ pass_deploy_secrets_secret_path }}"
+    mode: '0600'
+    owner: "{{ pass_deploy_secrets_owner }}"
+    group: "{{ pass_deploy_secrets_group }}"
+  when: pass_deploy_secrets_value is defined

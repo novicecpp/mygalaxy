@@ -29,6 +29,8 @@
   vars:
     pass_deploy_secrets_pass_path: "{{ certbot_secret_pass_path }}"
     pass_deploy_secrets_secret_path: /data/containers/certbot/secrets/digitalocean.ini
+    pass_deploy_secrets_pass_template: |
+      dns_digitalocean_token = ###pass_deploy_secrets_value###
 
 - name: copy systemd unit
   ansible.builtin.copy:
