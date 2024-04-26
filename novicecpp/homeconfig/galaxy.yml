@@ -1,13 +1,15 @@
 ---
-namespace: "novicecpp"
-name: "homeconfig"
+namespace: novicecpp
+name: homeconfig
 version: "0.1.0"
-readme: "README.md"
+readme: README.md
 authors:
   - Thanayut Seethongchuen (thanayut.see@outlook.com)
 dependencies:
   - "kewlfft.aur": ">=0.11.1"
   - "community.general": ">=8.1.0"
 
-#license:
-#repository: "https://www.github.com/my_org/my_collection"
+license:
+  - GPL-3.0-or-later
+repository: https://github.com/novicecpp/mygalaxy
+documentation: https://github.com/novicecpp/mygalaxy/blob/master/novicecpp/homeconfig/README.md

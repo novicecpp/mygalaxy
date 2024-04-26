@@ -25,7 +25,7 @@
 
 - name: deploy secrets
   include_role:
-    name: novicecpp.homeserver.pass_deploy_secrets
+    name: novicecpp.homeconfig.pass_deploy_secrets
   vars:
     pass_deploy_secrets_pass_path: "{{ certbot_secret_pass_path }}"
     pass_deploy_secrets_secret_path: /data/containers/certbot/secrets/digitalocean.ini
