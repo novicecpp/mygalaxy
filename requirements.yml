@@ -1,0 +1,10 @@
+---
+collections:
+  # novicecpp.homeconfig
+  - name: kewlfft.aur
+    version: ">=0.11.1"
+  - name: community.general
+    version: ">=8.6.0"
+  # require by home-server setup
+  - name: community.docker
+    version: ">=3.8.1"
