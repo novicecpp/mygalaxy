@@ -1,3 +1,3 @@
 # My (Ansible) Galaxy
 
-Collection of roles and tasks I use it daily on my private machine.
+Collection of roles I use on my private machine and home-server.
