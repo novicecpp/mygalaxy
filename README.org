@@ -1,0 +1,6 @@
+* My (Ansible) Galaxy
+Collection of roles I use on my private machine and home-server.
+** Install
+For development, use [[file:install.sh]] to install Ansible Galaxy dependency and symlink [[file:novicecpp]] to =~/.ansible/collections/ansible_collections/=
+** Usage
+See [[https://github.com/novicecpp/home-config-ansible][home-config-ansible]]
