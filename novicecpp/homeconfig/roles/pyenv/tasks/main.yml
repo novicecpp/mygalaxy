@@ -1,0 +1,8 @@
+---
+- name: install pyenv
+  include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: install python
+  shell: |
+         pyenv install -s {{ item }}
+  loop: "{{ pyenv_install_versions }}"

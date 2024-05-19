@@ -1,0 +1,7 @@
+---
+- name: install pyenv with pacman
+  community.general.pacman:
+    name:
+      - pyenv
+    state: present
+  become: true
