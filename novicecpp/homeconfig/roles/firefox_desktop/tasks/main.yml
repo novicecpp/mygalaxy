@@ -1,0 +1,10 @@
+---
+- name: render desktop files
+  ansible.builtin.template:
+    src: firefox-custom.desktop.j2
+    dest: /tmp/firefox-custom.desktop
+    mode: '0644'
+
+- name: install with xdg-desktop-menu
+  shell: |
+    xdg-desktop-menu install /tmp/firefox-custom.desktop
