@@ -32,6 +32,15 @@
     upgrade: true
   become: true
 
+- name: copy makepkg config for build aur package
+  ansible.builtin.copy:
+    src: etc/makepkg.conf
+    dest: /etc/makepkg.conf
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+
 - name: Create the `aur_builder` user
   ansible.builtin.user:
     name: aur_builder
