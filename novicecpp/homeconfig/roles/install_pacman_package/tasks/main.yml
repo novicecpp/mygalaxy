@@ -100,3 +100,7 @@
   become: true
   become_user: aur_builder
   when: aur_packages | length > 0
+
+- name: import private_aur
+  ansible.builtin.import_role:
+    name: novicecpp.homeconfig.private_aur
