@@ -29,10 +29,18 @@
   become: true
   become_user: aur_builder
 
-- name: build and install
-  ansible.builtin.shell: makepkg -f -i --noconfirm
+- name: build
+  ansible.builtin.shell: makepkg -f
   args:
     chdir: "/tmp/private-aur/{{ item }}"
   loop: "{{ private_aur_packages }}"
   become: true
   become_user: aur_builder
+
+# install separately to pass --ask 4 command
+- name: install
+  ansible.builtin.shell: pacman -U {{ item }}*.pkg.tar.zst --noconfirm --ask 4
+  args:
+    chdir: "/tmp/private-aur/{{ item }}"
+  loop: "{{ private_aur_packages }}"
+  become: true

@@ -17,24 +17,13 @@
     update_cache: true
   become: true
 
-# 1) I do not know how to pass args to confirm pacman to remove
-#     iptables with iptables-nft
-# 2) need detect conflict package here, and logic how to solve that
-#     e.g. mutter vs mutter-performance
-#     maybe same as iptables-nft
-- name: pacman remove packages
-  community.general.pacman:
-    name: "{{ pacman_remove_packages }}"
-    state: absent
-    force: true
-  become: true
-
 - name: pacman install packages
   community.general.pacman:
     name: "{{ pacman_pacstrap_packages + pacman_packages + pacman_extra_packages }}"
     reason: explicit
     reason_for: all
     state: present
+    extra_args: --ask 4
   become: true
 
 # need to upgrade later due to deps conflict (or packages move from core to extra)
