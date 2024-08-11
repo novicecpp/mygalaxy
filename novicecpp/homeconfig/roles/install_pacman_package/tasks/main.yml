@@ -73,23 +73,13 @@
   become_user: aur_builder
 
 # disable upgrade all aur.
-# some aur (in this case, gct), also manual install package is not properly test and break while build.
+# some aur (in this case, gct) are manual installed. it is not properly test and break while build.
 #- name: Upgrade the system using yay, only act on AUR packages.
 #  kewlfft.aur.aur:
 #    upgrade: true
 #    update_cache: true
 #    use: yay
 #    aur_only: true
-
-- name: import keys from url for aur
-  ansible.builtin.shell:
-    cmd: curl -sS {{ item }} | gpg --import -
-    executable: /bin/bash
-  loop:
-    # spotify
-    - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
-  become: true
-  become_user: aur_builder
 
 # install always upgrade to latest
 - name: install aur packages

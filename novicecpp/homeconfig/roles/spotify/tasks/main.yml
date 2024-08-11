@@ -1,0 +1,20 @@
+---
+# this role depend aur_builder user from install_pacman_packages roles
+# TODO: write deps
+- name: import keys from url for aur
+  ansible.builtin.shell:
+    cmd: curl -sS {{ item }} | gpg --import -
+    executable: /bin/bash
+  loop:
+    # spotify, hardcode
+    - https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg
+  become: true
+  become_user: aur_builder
+
+- name: install aur packages
+  kewlfft.aur.aur:
+    use: yay
+    name: spotify
+    state: latest
+  become: true
+  become_user: aur_builder
