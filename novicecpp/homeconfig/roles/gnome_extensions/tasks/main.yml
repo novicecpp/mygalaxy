@@ -1,0 +1,11 @@
+---
+- name: pacman install gnome appindicator extension
+  community.general.pacman:
+    name: gnome-shell-extension-appindicator
+    reason: explicit
+    reason_for: all
+    state: present
+    extra_args: --ask 4
+  become: true
+- name: enable
+  shell: gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com
