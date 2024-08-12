@@ -1,0 +1,11 @@
+---
+- name: install aur packages
+  kewlfft.aur.aur:
+    use: yay
+    name:
+      - steamtinkerlaunch
+      - protontricks
+      - steam
+    state: latest
+  become: true
+  become_user: aur_builder
