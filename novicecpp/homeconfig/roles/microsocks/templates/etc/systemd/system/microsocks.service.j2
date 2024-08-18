@@ -1,0 +1,14 @@
+[Unit]
+Description=microsocks tunnel
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/{{ microsocks_command }}
+Restart=always
+RestartSec=5
+DynamicUser=yes
+
+[Install]
+WantedBy=default.target

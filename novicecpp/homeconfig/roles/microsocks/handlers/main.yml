@@ -1,0 +1,5 @@
+---
+- name: restart microsocks
+  ansible.builtin.systemd_service:
+    name: microsocks
+    state: restarted

@@ -1,0 +1,6 @@
+---
+- name: install microsocks
+  ansible.builtin.apt:
+    name: microsocks
+    update_cache: true
+  become: true

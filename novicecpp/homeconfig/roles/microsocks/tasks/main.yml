@@ -1,0 +1,18 @@
+---
+- name: install
+  include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: install microsocks service
+  ansible.builtin.template:
+    src: etc/systemd/system/microsocks.service.j2
+    dest: /etc/systemd/system/microsocks.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart microsocks
+
+- name: enable microsocks
+  ansible.builtin.systemd_service:
+    name: microsocks
+    daemon_reload: true
+    enabled: true
