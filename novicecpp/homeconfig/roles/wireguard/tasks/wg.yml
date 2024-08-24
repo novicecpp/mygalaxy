@@ -76,7 +76,7 @@
 - name: enable wireguard
   ansible.builtin.systemd:
     name: wg-quick@{{ wg_interface }}
-    state: started
+    enabled: true
   become: true
   when: should_enable
 
