@@ -23,13 +23,13 @@
     reason: explicit
     reason_for: all
     state: present
-    extra_args: --ask 4
   become: true
 
 # need to upgrade later due to deps conflict (or packages move from core to extra)
 - name: pacman upgrade
   community.general.pacman:
     upgrade: true
+    upgrade_extra_args: --ask 4
   become: true
 
 - name: copy makepkg config for build aur package
