@@ -1,0 +1,3 @@
+---
+- name: run tasks
+  include_tasks: "client.yml"

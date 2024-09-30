@@ -1,0 +1,14 @@
+[Unit]
+Description=Autossh {{ var_mode }}
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/autossh -M 0 -F /home/{{ var_user }}/.ssh/ssh_config_autossh_{{ var_mode }} autossh_{{ var_mode }}
+User={{ var_user }}
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=default.target

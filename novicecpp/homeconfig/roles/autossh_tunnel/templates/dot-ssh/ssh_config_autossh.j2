@@ -1,0 +1,19 @@
+Host autossh_{{ var_mode }}
+{% if var_mode == 'socks5' %}
+    HostName localhost
+{% else %}
+    HostName {{ var_hostname }}
+{% endif %}
+    Port 22
+    IdentityFile /home/{{ var_user }}/.ssh/ssh_privkey
+    RequestTTY no
+    SessionType none
+{% if var_mode == 'socks5' %}
+    DynamicForward {{ var_listen_ip }}:18881
+    Compression no
+{% else %}
+    RemoteForward {{ var_remote_port }} localhost:22
+{% endif %}
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    ExitOnForwardFailure yes

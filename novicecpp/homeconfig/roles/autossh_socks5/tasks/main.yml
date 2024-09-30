@@ -1,0 +1,29 @@
+---
+- name: enable GatewayPorts for socks5 user
+  ansible.builtin.template:
+    src: etc/ssh/sshd_config.d/00-socks5.conf.j2
+    dest: /etc/ssh/sshd_config.d/00-socks5.conf
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify:
+    - restart ssh
+
+- name: setup autossh client
+  ansible.builtin.include_role:
+    name: novicecpp.homeconfig.autossh_tunnel
+  vars:
+    autossh_tunnel_mode: socks5
+    autossh_tunnel_user: "{{ autossh_socks5_user }}"
+    autossh_tunnel_listen_ip: "{{ autossh_socks5_listen_ip }}"
+    autossh_tunnel_passkey_path: "{{ autossh_socks5_passkey_path }}"
+    autossh_tunnel_known_hosts_passkey_path: "{{ autossh_socks5_known_hosts_passkey_path }}"
+
+- name: setup autossh server
+  ansible.builtin.include_role:
+    name: novicecpp.homeconfig.autossh_tunnel
+  vars:
+    autossh_tunnel_mode: server # server tunnel and socks5 use same setup
+    autossh_tunnel_user: "{{ autossh_socks5_user }}"
+    autossh_tunnel_authorized_keys_path: "{{ autossh_socks5_authorized_keys_path }}"

@@ -1,0 +1,5 @@
+---
+autossh_tunnel_user: autossh
+autossh_tunnel_hostname: localhost
+autossh_tunnel_remote_port: '12345'
+autossh_tunnel_listen_ip: '127.0.0.1'
