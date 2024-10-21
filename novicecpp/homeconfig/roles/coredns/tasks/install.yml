@@ -9,8 +9,9 @@
   loop:
     - /etc/sysusers.d
     - /etc/tmpfiles.d
-    - /etc/coredns
-    - /opt/coredns/bin
+    - "/etc/{{ coredns_appname }}"
+    - "/opt/{{ coredns_appname }}/bin"
+  become: true
 
 - name: downloads coredns
   include_role:
@@ -20,24 +21,11 @@
     checksum: "{{ coredns_download_checksum }}"
     path:
       - src: coredns
-        dest: /opt/coredns/bin
-
-- name: Create temp dir
-  ansible.builtin.tempfile:
-    state: directory
-  register: tempdir
-
-- name: clone coredns/deployment repo
-  ansible.builtin.git:
-    repo: "{{ coredns_deployment_download_url }}"
-    dest: "{{ tempdir.path }}/deployment"
-    version: "{{ coredns_deployment_version }}"
-
-- set_fact:
-    coredns_systemd_src_dir: "{{ tempdir.path }}/deployment/systemd"
+        dest: /opt/{{ coredns_appname }}/bin
+    copy_become: true
 
 - name: copy deployment config
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: '0644'
@@ -45,25 +33,23 @@
     group: root
     remote_src: true
   loop:
-    - src: "{{ coredns_systemd_src_dir }}/coredns.service"
-      dest: /etc/systemd/system/
-    - src: "{{ coredns_systemd_src_dir }}/coredns-sysusers.conf"
-      dest: /etc/sysusers.d/
-    - src: "{{ coredns_systemd_src_dir }}/coredns-tmpfiles.conf"
-      dest: /etc/tmpfiles.d/
-    - src: "{{ coredns_systemd_src_dir }}/coredns-log.conf"
-      dest: /etc/logrotate.d/
+    - src: "etc/systemd/system/coredns.service.j2"
+      dest: /etc/systemd/system/{{ coredns_appname }}.service
+    - src: "etc/sysusers.d/coredns-sysusers.conf.j2"
+      dest: /etc/sysusers.d/{{ coredns_appname }}-sysusers.conf
+    - src: "etc/tmpfiles.d/coredns-tmpfiles.conf.j2"
+      dest: /etc/tmpfiles.d/{{ coredns_appname }}-tmpfiles.conf
+    - src: "etc/logrotate.d/coredns-log.conf.j2"
+      dest: /etc/logrotate.d/{{ coredns_appname }}-log.conf
+  become: true
 
 - name: enable systemd unit
   ansible.builtin.systemd_service:
-    name: coredns
+    name: "{{ coredns_appname }}"
     enabled: true
     daemon_reload: true
+  become: true
 
 - name: trigger systemd-sysusers and systemd-tmpfiles
   shell: systemd-tmpfiles --create; systemd-sysusers;
-
-- name: cleanup tempdir
-  ansible.builtin.file:
-    path: "{{ tempdir.path }}"
-    state: absent
+  become: true

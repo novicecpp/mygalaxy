@@ -1,0 +1,13 @@
+/var/log/{{ coredns_appname }}.log {
+  rotate 5
+  size 10M
+  compress
+  notifempty
+}
+
+/var/log/{{ coredns_appname }}.err.log {
+  rotate 5
+  size 10M
+  compress
+  notifempty
+}

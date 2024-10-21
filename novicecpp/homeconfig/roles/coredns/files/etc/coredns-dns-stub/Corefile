@@ -1,0 +1,8 @@
+. {
+    bind ::1
+    log
+    debug
+    forward . 127.0.0.53
+}
+
+# comment2

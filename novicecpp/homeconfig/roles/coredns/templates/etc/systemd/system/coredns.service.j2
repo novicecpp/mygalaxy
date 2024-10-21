@@ -1,0 +1,27 @@
+[Unit]
+Description=CoreDNS DNS server - for {{ coredns_appname }}
+Documentation=https://coredns.io
+{% if coredns_dns_stub_mode %}
+After=systemd-resolved.service
+{% else %}
+After=wg-quick@{{ coredns_bind_interface }}.service
+{% endif %}
+
+[Service]
+PermissionsStartOnly=true
+LimitNOFILE=1048576
+LimitNPROC=512
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+User=coredns
+WorkingDirectory=/var/lib/{{ coredns_appname }}
+ExecStart=/opt/{{ coredns_appname }}/bin/coredns -conf=/etc/{{ coredns_appname }}/Corefile
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+Restart=on-failure
+StandardOutput=append:/var/log/{{ coredns_appname }}.log
+StandardError=append:/var/log/{{ coredns_appname }}.err.log
+
+
+[Install]
+WantedBy=multi-user.target

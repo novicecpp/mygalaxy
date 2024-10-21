@@ -5,14 +5,21 @@ coredns_downloads:
       url: https://github.com/coredns/coredns/releases/download/v1.11.1/coredns_1.11.1_linux_amd64.tgz
       checksum: sha256:f96cdee0934c5c12a28bb0fb080bed688fdd7bfdeae2f64984f02bdec2d65498
       bin_checksum: b6fabbe1143c3d2a911b745aba255189c80cb40cee9a86cba6edb0c76607686c
+    v1.11.3:
+      url: https://github.com/coredns/coredns/releases/download/v1.11.3/coredns_1.11.3_linux_amd64.tgz
+      checksum: sha256:6af4d6a5412734417378f778343c4fba363a61ae027060675123d4296f5a8ee5
+      bin_checksum: 7a2d00cc8a9a8751d7c5c00a4e83e224e517ab4522fa59a4be4a2f594287d0c3
   deployment:
     d222a8e4781d707b29a9e4da26e04e75d3fa678b:
       url: https://github.com/coredns/deployment/
 
-coredns_version: v1.11.1
+coredns_version: v1.11.3
 coredns_download_url: "{{ coredns_downloads['coredns'][coredns_version]['url'] }}"
 coredns_download_checksum: "{{ coredns_downloads['coredns'][coredns_version]['checksum'] }}"
 coredns_bin_checksum: "{{ coredns_downloads['coredns'][coredns_version]['bin_checksum'] }}"
 
 coredns_deployment_version: d222a8e4781d707b29a9e4da26e04e75d3fa678b
 coredns_deployment_download_url: "{{ coredns_downloads['deployment'][coredns_deployment_version]['url'] }}"
+
+coredns_appname: coredns
+coredns_config_path: "{{ inventory_dir + '/files/etc/coredns/' }}"

@@ -1,6 +1,0 @@
-[Service]
-ExecStart=
-ExecStart=/opt/coredns/bin/coredns -conf=/etc/coredns/Corefile
-
-[Unit]
-After=wg-quick@{{ coredns_bind_interface }}.service
