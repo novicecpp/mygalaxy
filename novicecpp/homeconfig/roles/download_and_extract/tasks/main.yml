@@ -37,8 +37,7 @@
     remote_src: true
   when: strip_component is undefined
 
-
-
 - name: "copy with rsync from {{ item.src }} to {{ item.dest }}"
   shell: 'rsync -av {{ extract_dir.path }}/{{ item.src }} {{ item.dest }}'
   loop: "{{ path }}"
+  become: "{{ copy_become | default(false) }}"
