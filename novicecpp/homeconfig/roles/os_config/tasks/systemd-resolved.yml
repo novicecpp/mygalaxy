@@ -6,9 +6,18 @@
     enabled: true
   become: true
 
-- name: replace /etc/resolv.conf to systemd-resolved stub
+- name: copy resolv.conf
+  ansible.builtin.copy:
+    src: "etc/resolv-ipv6-support.conf"
+    dest: /etc/resolv-ipv6-support.conf
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+
+- name: replace /etc/resolv.conf to custom systemd-resolved stub
   ansible.builtin.file:
-    src: /run/systemd/resolve/stub-resolv.conf
+    src: /etc/resolv-ipv6-support.conf
     dest: /etc/resolv.conf
     force: true
     state: link
@@ -17,16 +26,27 @@
 
 - name: get stat of resoved.conf in inventory_dir
   ansible.builtin.stat:
-    path: "{{ inventory_dir }}/files//etc/systemd/resolved.conf"
+    path: "{{ inventory_dir }}/files/etc/systemd/resolved.conf"
   register: st
 
 - name: copy systemd-resolved config
   ansible.builtin.copy:
-    src: "{{ inventory_dir }}/files//etc/systemd/resolved.conf"
+    src: "{{ inventory_dir }}/files/etc/systemd/resolved.conf"
     dest: /etc/systemd/resolved.conf
     mode: '0644'
     owner: root
     group: root
   notify: restart systemd-resolved
   when: st.stat.exists
+  become: true
+
+- name: copy systemd-resolved default config
+  ansible.builtin.copy:
+    src: "etc/systemd/resolved.conf"
+    dest: /etc/systemd/resolved.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify: restart systemd-resolved
+  when: not st.stat.exists
   become: true
