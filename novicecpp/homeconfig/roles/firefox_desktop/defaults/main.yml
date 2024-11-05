@@ -1,0 +1,5 @@
+---
+firefox_profiles_backup_profile_path: ~/.mozilla/firefox
+firefox_profiles_backup_backup_path: /path/to/backup
+firefox_profiles_backup_profiles:
+  - default

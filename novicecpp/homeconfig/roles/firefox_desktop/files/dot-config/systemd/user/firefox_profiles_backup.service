@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup firefox profile
+
+[Service]
+Type=simple
+ExecStart=/opt/firefox_profiles_backup/backup.sh
+
+[Install]
+WantedBy=default.target

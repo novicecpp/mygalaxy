@@ -8,3 +8,6 @@
 - name: install with xdg-desktop-menu
   shell: |
     xdg-desktop-menu install /tmp/firefox-custom.desktop
+
+- name: install firefox_profile_backup
+  include_tasks: firefox_profiles_backup.yml

@@ -1,0 +1,43 @@
+---
+- name: ensure dir
+  ansible.builtin.file:
+    path: /opt/firefox_profiles_backup
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: install
+  ansible.builtin.copy:
+    src: opt/firefox_profiles_backup/backup.sh
+    dest: /opt/firefox_profiles_backup/backup.sh
+    mode: '0755'
+  become: true
+
+- name: ensure dir
+  ansible.builtin.file:
+    path: ~/.config/firefox_profiles_backup/
+    state: directory
+    mode: '0700'
+
+- name: install envfile
+  ansible.builtin.template:
+    src: dot-config/firefox_profiles_backup/env.j2
+    dest: ~/.config/firefox_profiles_backup/env
+    mode: '0644'
+
+- name: install local service and timer
+  ansible.builtin.copy:
+    src: dot-config/systemd/user/firefox_profiles_backup.{{ item }}
+    dest: ~/.config/systemd/user/firefox_profiles_backup.{{ item }}
+    mode: '0644'
+  loop:
+    - service
+    - timer
+
+- name: enable timer
+  ansible.builtin.systemd_service:
+    name: firefox_profiles_backup.timer
+    enabled: true
+    daemon_reload: true
+    scope: user
+    state: started
