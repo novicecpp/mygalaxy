@@ -1,0 +1,15 @@
+---
+# Make sure all home dirs are 0700.
+# In debian (at least 12), newly create home directory is still 0755, too open.
+# https://www.reddit.com/r/debian/comments/ohur61/why_is_the_home_directory_not_private_by_default/
+- name: find subdirs
+  ansible.builtin.find:
+    path: /home
+    file_type: directory
+  register: home_subdirs
+
+- name: set home subdir permissions
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0700"
+  loop: "{{ home_subdirs.files }}"
