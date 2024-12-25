@@ -23,3 +23,4 @@ coredns_deployment_download_url: "{{ coredns_downloads['deployment'][coredns_dep
 
 coredns_appname: coredns
 coredns_config_path: "{{ inventory_dir + '/files/etc/coredns/' }}"
+coredns_dns_stub_mode: false
