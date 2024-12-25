@@ -14,7 +14,7 @@
 
 - name: copy config
   ansible.builtin.copy:
-    src: etc/networkd-dispatcher/{{ item }}.d/
+    src: "{{ inventory_dir + '/files/etc/networkd-dispatcher/' + item + '.d/' }}"
     dest: /etc/networkd-dispatcher/{{ item }}.d/
     owner: root
     group: root
