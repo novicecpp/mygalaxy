@@ -19,6 +19,7 @@ WorkingDirectory=/var/lib/{{ coredns_appname }}
 ExecStart=/opt/{{ coredns_appname }}/bin/coredns -conf=/etc/{{ coredns_appname }}/Corefile
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 Restart=on-failure
+RestartSec=5
 StandardOutput=append:/var/log/{{ coredns_appname }}.log
 StandardError=append:/var/log/{{ coredns_appname }}.err.log
 
