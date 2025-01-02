@@ -14,11 +14,23 @@
     enabled: true
     state: started
   loop:
-    - gdm
     - NetworkManager
     - bluetooth
   become: true
 
-- name: set-default
-  ansible.builtin.shell: systemctl set-default graphical.target
-  become: true
+- name: enable gui
+  block:
+    - name: enable display manager
+      ansible.builtin.systemd:
+        name: "{{ os_config_display_manager }}"
+        enabled: true
+      become: true
+    - name: systemctl get-default
+      ansible.builtin.shell: systemctl get-default
+      register: result
+      changed_when: false
+      become: true
+    - name: set-default graphical.target
+      ansible.builtin.shell: systemctl set-default graphical.target
+      when: result.stdout != "graphical.target"
+      become: true
