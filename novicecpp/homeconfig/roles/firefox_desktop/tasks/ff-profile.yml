@@ -1,0 +1,16 @@
+---
+- name: profile name
+  debug:
+    msg: "{{ _profile_name }}"
+
+- name: render desktop files
+  ansible.builtin.template:
+    src: ff-profile.desktop.j2
+    dest: "~/.local/share/applications/ff-{{ _profile_name }}.desktop"
+    mode: '0644'
+
+- name: copy desktop icon
+  ansible.builtin.copy:
+    src: "{{ firefox_desktop_icon_path }}/ff-{{ _profile_name }}.png"
+    dest: "~/.local/share/icons/ff-{{ _profile_name }}.png"
+    mode: '0644'

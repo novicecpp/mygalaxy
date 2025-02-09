@@ -1,13 +1,22 @@
 ---
-- name: render desktop files
-  ansible.builtin.template:
-    src: firefox-custom.desktop.j2
-    dest: /tmp/firefox-custom.desktop
+- name: copy original firefox desktop
+  ansible.builtin.copy:
+    src: /usr/share/applications/firefox.desktop
+    dest: ~/.local/share/applications/firefox.desktop
     mode: '0644'
 
-- name: install with xdg-desktop-menu
-  shell: |
-    xdg-desktop-menu install /tmp/firefox-custom.desktop
+- name: modify StartupWMClass
+  ansible.builtin.lineinfile:
+    path: ~/.local/share/applications/firefox.desktop
+    regexp: '^StartupWMClass='
+    line: StartupWMClass=firefoxbase
 
-- name: install firefox_profile_backup
-  include_tasks: firefox_profiles_backup.yml
+- name: create ff-profile
+  include_tasks: ff-profile.yml
+  loop: "{{ firefox_desktop_profiles }}"
+  loop_control:
+    loop_var: _profile_name
+
+- name: run update-desktop-database
+  ansible.builtin.shell:
+    cmd: update-desktop-database ~/.local/share/applications/
