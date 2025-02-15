@@ -1,0 +1,8 @@
+---
+- name: install rust
+  include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: Install cargo app
+  community.general.cargo:
+    name: "{{ cargo_packages }}"
+    locked: true
