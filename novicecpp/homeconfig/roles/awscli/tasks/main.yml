@@ -1,0 +1,10 @@
+---
+- name: aws --version
+  ansible.builtin.shell:
+    cmd: aws --version --output | cut -d' ' -f1 | cut -d'/' -f2
+  changed_when: false
+  ignore_errors: true
+  register: awscli_current_version
+- name: install awscli
+  include_tasks: install.yml
+  when: awscli_version is version(awscli_current_version.stdout, '>')

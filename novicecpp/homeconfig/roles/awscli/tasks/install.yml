@@ -1,0 +1,23 @@
+---
+- name: Create temporary build directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: build
+  register: tempdir_1
+
+- debug:
+    msg: "{{ awscli_download_url }}"
+
+- name: download awscli
+  include_role:
+    name: novicecpp.homeconfig.download_and_extract
+  vars:
+    download_url: "{{ awscli_download_url }}"
+    checksum: "{{ awscli_download_checksum }}"
+    path:
+      - src: aws
+        dest: "{{ tempdir_1.path }}/"
+
+- name: install awscli
+  ansible.builtin.shell:
+    cmd: "{{ tempdir_1.path }}/aws/install --bin-dir ~/.local/bin --install-dir ~/.local/share/aws-cli --update"

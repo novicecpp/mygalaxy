@@ -1,0 +1,13 @@
+---
+awscli_downloads:
+  awscliv2:
+    2.24.14:
+      url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.24.14.zip
+      checksum: sha256:f77145f3efc2a9531fd3d6102da3ea21d805d93dc7ef17bbd52c1f486c830ed3
+
+awscli_download_url: "{{ awscli_downloads['awscliv2'][awscli_version]['url'] }}"
+awscli_download_checksum: "{{ awscli_downloads['awscliv2'][awscli_version]['checksum'] }}"
+
+## default version
+
+awscli_version: 2.24.14
