@@ -17,6 +17,8 @@
     append: true
   become: true
 
+# idempotent appending the string at the end of line in file
+# https://stackoverflow.com/questions/56154791/ansible-append-a-string-to-an-existing-line-in-a-file#comment132982093_56155539
 - name: add lpadmin group to cups
   ansible.builtin.lineinfile:
     path: /etc/cups/cups-files.conf
