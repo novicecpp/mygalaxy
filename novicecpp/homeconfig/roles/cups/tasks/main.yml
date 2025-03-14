@@ -1,0 +1,33 @@
+---
+- name: install cups
+  include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: add lpadmin group
+  ansible.builtin.group:
+    name: lpadmin
+    system: true
+    state: present
+  become: true
+
+- name: Add user to group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    shell: /bin/bash
+    groups: lpadmin
+    append: true
+  become: true
+
+- name: add lpadmin group to cups
+  ansible.builtin.lineinfile:
+    path: /etc/cups/cups-files.conf
+    backrefs: true
+    regexp: "^(SystemGroup .+?)( lpadmin)?$"
+    line: '\1 lpadmin'
+  become: true
+
+- name: enable cups now
+  ansible.builtin.systemd_service:
+    name: cups.service
+    state: started
+    enabled: true
+  become: true

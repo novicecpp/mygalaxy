@@ -1,0 +1,10 @@
+---
+- name: install cups and deps with pacman
+  community.general.pacman:
+    name:
+      - cups
+      - cups-filters
+      - libjpeg6-turbo  # canon, solves cpu hang when print color
+      - ghostscript
+    state: present
+  become: true

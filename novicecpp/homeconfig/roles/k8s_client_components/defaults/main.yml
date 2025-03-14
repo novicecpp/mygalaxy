@@ -10,6 +10,10 @@ k8s_client_downloads:
     v3.17.0:
       url: https://get.helm.sh/helm-v3.17.0-linux-amd64.tar.gz
       checksum: sha256:fb5d12662fde6eeff36ac4ccacbf3abed96b0ee2de07afdde4edb14e613aee24
+    v3.17.1:
+      url: https://get.helm.sh/helm-v3.17.1-linux-amd64.tar.gz
+      checksum: sha256:3b66f3cd28409f29832b1b35b43d9922959a32d795003149707fea84cbcd4469
+
   kubectl:
     v1.28.3:
       url: https://dl.k8s.io/v1.28.3/kubernetes-client-linux-amd64.tar.gz
@@ -17,9 +21,13 @@ k8s_client_downloads:
     v1.29.5:
       url: https://dl.k8s.io/v1.29.5/kubernetes-client-linux-amd64.tar.gz
       checksum: sha256:b8a5a916c23660206eb7b6f35e48796e424b42cf86a65a792e8442490e466215
+    v1.31.6:
+      url: https://dl.k8s.io/v1.31.6/kubernetes-client-linux-amd64.tar.gz
+      checksum: sha512:dd3d8723e7ff54aa4c8a1087d961c8f604b8dce5a6981357daea9b8e1882efbfaf9e226afc35cdc277e2ac06f6ef3bd9867c21158d9ae917d02ade7c245f8610
     v1.32.1:
       url: https://dl.k8s.io/v1.32.1/kubernetes-client-linux-amd64.tar.gz
       checksum: sha512:3eff144cdc8db4681fcf9b2205fa732ea7836e7878d9cc5617171970bbf80813eea45d08e1d00f6d652b6364c4a099e3e40a2a6a3ddad11a9896c73cda3118d2
+
   kubelogin:
     v1.28.0:
       url: https://github.com/int128/kubelogin/releases/download/v1.28.0/kubelogin_linux_amd64.zip
@@ -63,7 +71,7 @@ kustomize_download_checksum: "{{ k8s_client_downloads['kustomize'][kustomize_ver
 
 ## default version
 
-helm_version: v3.17.0
+helm_version: v3.17.1
 kubectl_version: v1.32.1
 kubectx_version: v0.9.5
 kubelogin_version: v1.28.0
