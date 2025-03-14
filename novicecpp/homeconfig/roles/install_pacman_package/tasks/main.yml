@@ -85,7 +85,7 @@
 - name: install aur packages
   kewlfft.aur.aur:
     use: yay
-    name: "{{ aur_packages }}"
+    name: "{{ aur_packages + aur_extra_packages }}"
     state: latest
   become: true
   become_user: aur_builder
