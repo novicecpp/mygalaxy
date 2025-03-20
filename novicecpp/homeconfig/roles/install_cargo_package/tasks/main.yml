@@ -4,5 +4,5 @@
 
 - name: Install cargo app
   community.general.cargo:
-    name: "{{ cargo_packages }}"
+    name: "{{ cargo_packages + cargo_extra_packages }}"
     locked: true
