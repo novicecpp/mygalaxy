@@ -1,0 +1,14 @@
+---
+- name: Git checkout private-aur
+  ansible.builtin.git:
+    repo: '{{ private_aur_repository }}'
+    dest: /tmp/private-aur
+    version: master
+  become: true
+  become_user: aur_builder
+
+- name: build and install using script
+  ansible.builtin.shell: /tmp/private-aur/build_and_install.sh {{ item }}
+  become: true
+  become_user: aur_builder
+  loop: "{{ private_aur_packages }}"

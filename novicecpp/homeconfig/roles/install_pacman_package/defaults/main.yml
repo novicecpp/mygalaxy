@@ -1,3 +1,8 @@
 ---
+pacman_packages:
+  - linux
 pacman_extra_packages: []
+aur_packages:
+  - docker-credential-secretservice
 aur_extra_packages: []
+private_aur_packages: []

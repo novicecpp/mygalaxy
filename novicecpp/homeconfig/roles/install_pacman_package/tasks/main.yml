@@ -82,6 +82,7 @@
 #    aur_only: true
 
 # install always upgrade to latest
+
 - name: install aur packages
   kewlfft.aur.aur:
     use: yay
@@ -91,6 +92,5 @@
   become_user: aur_builder
   when: aur_packages | length > 0
 
-- name: import private_aur
-  ansible.builtin.import_role:
-    name: novicecpp.homeconfig.private_aur
+- import_tasks: private_aur.yml
+  when: private_aur_packages | length > 0
