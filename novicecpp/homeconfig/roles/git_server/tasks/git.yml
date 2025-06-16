@@ -1,4 +1,9 @@
 ---
+- name: disable chattr +i
+  ansible.builtin.shell:
+    cmd: chattr -R -i .ssh git-shell-commands
+    chdir: "/home/{{ git_server_username }}"
+
 - name: add user "{{ git_server_username }}"
   ansible.builtin.user:
     name: "{{ git_server_username }}"
@@ -67,3 +72,8 @@
     validate: /usr/sbin/sshd -t -f %s
   notify:
     - restart sshd
+
+- name: enable chattr +i
+  ansible.builtin.shell:
+    cmd: chattr -R +i .ssh git-shell-commands
+    chdir: "/home/{{ git_server_username }}"
