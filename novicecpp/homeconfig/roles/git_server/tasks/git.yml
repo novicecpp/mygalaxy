@@ -56,3 +56,14 @@
       no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ item }}
   loop: "{{ git_server_pubkeys }}"
   become: true
+
+- name: extra sshd_config for "{{ git_server_username }}"
+  ansible.builtin.template:
+    src: user.conf.j2
+    dest: "/etc/ssh/sshd_config.d/{{ git_server_username }}.conf"
+    owner: root
+    group: root
+    mode: '0644'
+    validate: /usr/sbin/sshd -t -f %s
+  notify:
+    - restart sshd
