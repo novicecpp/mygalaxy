@@ -22,5 +22,5 @@ coredns_deployment_version: d222a8e4781d707b29a9e4da26e04e75d3fa678b
 coredns_deployment_download_url: "{{ coredns_downloads['deployment'][coredns_deployment_version]['url'] }}"
 
 coredns_appname: coredns
-coredns_config_path: "{{ inventory_dir + '/files/etc/coredns/' }}"
+coredns_config_path: "{{ inventory_hostname ~ '/etc/coredns/' }}"
 coredns_dns_stub_mode: false
