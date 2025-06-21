@@ -5,4 +5,4 @@ firefox_profiles_backup_profiles:
   - default
 
 
-firefox_desktop_icon_path: "{{ playbook_dir }}/../img"
+firefox_desktop_icon_path: "{{ playbook_dir }}/img"
