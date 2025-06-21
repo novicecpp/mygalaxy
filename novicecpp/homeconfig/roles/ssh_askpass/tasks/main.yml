@@ -1,0 +1,5 @@
+- name: install askpass.sh to local bin
+  ansible.builtin.copy:
+    src: askpass.sh
+    dest: ~/.local/bin/askpass.sh
+    mode: '0755'
