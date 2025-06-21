@@ -1,0 +1,13 @@
+---
+- name: check hostname
+  ansible.builtin.shell: hostnamectl hostname --static
+  changed_when: false
+  register: hostname_result
+
+- set_fact:
+    current_hostname: "{{ hostname_result.stdout | trim }}"
+
+- name: set hostname
+  ansible.builtin.shell: "hostnamectl hostname {{ os_config_hostname }}"
+  become: true
+  when: "current_hostname != os_config_hostname"
