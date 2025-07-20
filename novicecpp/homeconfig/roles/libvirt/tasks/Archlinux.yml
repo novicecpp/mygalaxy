@@ -1,12 +1,40 @@
 ---
+# conflicts (also dependencies) packages
+- community.general.pacman:
+    name: "openbsd-netcat"
+    state: absent
+    force: true
+  become: true
+
+- community.general.pacman:
+    name: "gnu-netcat"
+    state: present
+    reason: explicit
+    reason_for: all
+  become: true
+
+- name: install libvirt dependency
+  community.general.pacman:
+    name:
+      - cdrtools # required by libvirt terraform
+      # vim but conflict with gvim => xxd => steam
+      - gvim # for guestfish
+      - libguestfs # for guestfish
+      - dnsmasq # libvirt deps
+      - gnu-netcat # for virt-manager gui
+      - libxml2 # xmllint in network hook
+    state: present
+    reason: explicit
+    reason_for: all
+  become: true
+
 - name: install libvirt with pacman
   community.general.pacman:
     name:
       - qemu-full # libvirt backend
-      - dnsmasq
       - libvirt
       - virt-manager
-      - gnu-netcat # for virt-manager gui
-      - libxml2 # xmllint in network hook
     state: present
+    reason: explicit
+    reason_for: all
   become: true
