@@ -8,14 +8,26 @@
     group: root
   become: true
 
+- name: update pacman cache (pacman -Sy)
+  community.general.pacman:
+    update_cache: true
+  become: true
+
 # keyring need to be upgrade for newly signed packages.
 - name: pacman update archlinux-keyring
   community.general.pacman:
     name:
       - archlinux-keyring
     state: latest
-    update_cache: true
+    reason: explicit
+    reason_for: all
   become: true
+
+- name: remove conflict packages
+  include_tasks: conflict.yml
+  loop: "{{ pacman_conflict_packages }}"
+  loop_control:
+    loop_var: p
 
 - name: pacman install packages
   community.general.pacman:

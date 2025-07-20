@@ -1,0 +1,12 @@
+- community.general.pacman:
+    name: "{{ p.name }}"
+    state: absent
+    force: true
+  become: true
+
+- community.general.pacman:
+    name: "{{ p.replace_with }}"
+    state: present
+    reason: explicit
+    reason_for: all
+  become: true

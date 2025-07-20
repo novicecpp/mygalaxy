@@ -2,7 +2,10 @@
 pacman_packages:
   - linux
 pacman_extra_packages: []
+pacman_remove_packages: []
+pacman_conflict_packages: []
 aur_packages:
   - docker-credential-secretservice
 aur_extra_packages: []
 private_aur_packages: []
+private_aur_repository: ""
