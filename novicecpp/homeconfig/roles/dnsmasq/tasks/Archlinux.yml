@@ -1,0 +1,6 @@
+- name: pacman install dnsmasq
+  community.general.pacman:
+    name:
+      - dnsmasq
+    state: present
+  become: true

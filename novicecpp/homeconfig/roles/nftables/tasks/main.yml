@@ -1,0 +1,41 @@
+- name: create nftables config dir
+  ansible.builtin.file:
+    path: /etc/nftables.d/
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  become: true
+
+- name: copy root config
+  ansible.builtin.copy:
+    src: "{{ config_path }}/etc/nftables.conf"
+    dest: /etc/nftables.conf
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+  notify:
+    - reload nftables rules
+
+- name: copy all configs
+  ansible.builtin.copy:
+    src: "{{ config_path }}/etc/nftables.d"
+    dest: /etc/nftables.d
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+  notify:
+    - reload nftables rules
+
+- name: check nftables rules
+  ansible.builtin.shell: nft -c -f /etc/nftables.conf
+  changed_when: false
+
+- name: enable nftables
+  ansible.builtin.systemd_service:
+    name: nftables
+    state: started
+    enabled: true
+  become: true

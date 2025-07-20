@@ -1,0 +1,53 @@
+- name: install dnsmasq
+  include_tasks: "{{ ansible_distribution }}.yml"
+
+- name: create dnsmasq data dir
+  ansible.builtin.file:
+    path: /var/lib/dnsmasq/
+    state: directory
+    mode: '0755'
+    owner: dnsmasq
+    group: dnsmasq
+  become: true
+
+- name: create dnsmasq config dir
+  ansible.builtin.file:
+    path: /etc/dnsmasq.d/
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  become: true
+
+- name: copy root config
+  ansible.builtin.copy:
+    src: "{{ config_path }}/etc/dnsmasq.conf"
+    dest: /etc/dnsmasq.conf
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+  notify:
+    - restart dnsmasq
+
+- name: copy all configs
+  ansible.builtin.copy:
+    src: "{{ config_path }}/etc/dnsmasq.d"
+    dest: /etc/dnsmasq.d
+    mode: '0644'
+    owner: root
+    group: root
+  become: true
+  notify:
+    - restart dnsmasq
+
+- name: check nftables rules
+  ansible.builtin.shell: dnsmasq --test
+  changed_when: false
+
+- name: enable dnsmasq
+  ansible.builtin.systemd_service:
+    name: dnsmasq
+    state: started
+    enabled: true
+  become: true

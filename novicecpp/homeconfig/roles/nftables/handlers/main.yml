@@ -1,0 +1,3 @@
+- name: reload nftables rules
+  ansible.builtin.shell:
+    nft -f /etc/nftables.conf
