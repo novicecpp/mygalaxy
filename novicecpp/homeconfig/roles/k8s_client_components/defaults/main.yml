@@ -32,6 +32,9 @@ k8s_client_downloads:
     v1.28.0:
       url: https://github.com/int128/kubelogin/releases/download/v1.28.0/kubelogin_linux_amd64.zip
       checksum: sha256:83282148fcc70ee32b46edb600c7e4232cbad02a56de6dc17e43e843fa55e89e
+    v1.34.0:
+      url: https://github.com/int128/kubelogin/releases/download/v1.34.0/kubelogin_linux_amd64.zip
+      checksum: sha256:9f68bd3fb1427fd12befe492a45a309bcb341d1bdff0d090052cfe3833291529
   kubectx:
     v0.9.5:
       url: https://github.com/ahmetb/kubectx/archive/refs/tags/v0.9.5.tar.gz
@@ -74,5 +77,5 @@ kustomize_download_checksum: "{{ k8s_client_downloads['kustomize'][kustomize_ver
 helm_version: v3.17.1
 kubectl_version: v1.32.1
 kubectx_version: v0.9.5
-kubelogin_version: v1.28.0
+kubelogin_version: v1.34.0
 kustomize_version: v5.6.0
