@@ -1,6 +1,7 @@
 ---
 - set_fact:
     wg_interface: "{{ task_vars.name }}"
+    wg_machine_name: "{{ ansible_hostname }}"
     should_enable: "{{ task_vars.enabled | default(true) }}"
     ping_enable: "{{ task_vars.ping_enabled | default(false) }}"
     gateway_ip: "{{ task_vars.ping_server | default('127.0.0.1') }}"
@@ -17,6 +18,7 @@
 
 - set_fact:
     wg_config_path: "{{ wg_config_dir }}/{{ wg_machine_name }}/{{ wg_interface }}.conf"
+    wg_config_dot_d_path: "{{ wg_config_dir }}/{{ wg_machine_name }}/{{ wg_interface }}.d"
 
 - name: copy wireguard config
   ansible.builtin.copy:
@@ -27,7 +29,6 @@
     group: root
   notify: restart wireguard
   become: true
-
 
 - set_fact:
     wg_pass_abs_path: "{{ wg_pass_key_path }}/{{ wg_machine_name }}/{{ wg_interface }}"
@@ -52,23 +53,19 @@
 #  become: true
 #  loop: "{{ wg_peer_names }}"
 
-- name: ensure scripts dir
-  ansible.builtin.file:
-    path: /etc/wireguard/scripts/
-    state: directory
-    mode: '0700'
-    owner: root
-    group: root
-  become: true
-
-- name: copy pre-postup.sh script
+- name: copy postup/predown
   ansible.builtin.copy:
-    src: etc/wireguard/scripts/pre-postup.sh
-    dest: /etc/wireguard/scripts/pre-postup.sh
+    src: "{{ wg_config_dot_d_path }}/{{ item }}"
+    dest: "/etc/wireguard/{{ wg_interface }}.d/{{ item }}"
     mode: '0700'
     owner: root
     group: root
   become: true
+  notify: restart wireguard
+  loop:
+    - postup.sh
+    - predown.sh
+
 
 - name: per mode
   include_tasks: "{{ mode }}.yml"

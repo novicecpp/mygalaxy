@@ -1,5 +1,4 @@
 ---
-# need for pre-postup.sh script
 - name: copy peer pubkey
   ansible.builtin.copy:
     content: "{{ lookup('ansible.builtin.ini', 'PublicKey', section='Peer', file=wg_config_path) }}"

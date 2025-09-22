@@ -1,10 +1,25 @@
 ---
 - name: install wireguard-tools
   include_tasks: "dist/{{ ansible_distribution }}.yml"
-# variable
-# wg_interfaces:
-#   - name: wg-interface
-#     enabled: true/false
+
+- name: ensure scripts dir
+  ansible.builtin.file:
+    path: /etc/wireguard/scripts/
+    state: directory
+    mode: '0700'
+    owner: root
+    group: root
+  become: true
+
+- name: copy wg.sh script
+  ansible.builtin.copy:
+    src: etc/wireguard/scripts/wg.sh
+    dest: /etc/wireguard/scripts/wg.sh
+    mode: '0700'
+    owner: root
+    group: root
+  become: true
+
 - name: apply wireguard config
   include_tasks: wg.yml
   vars:
