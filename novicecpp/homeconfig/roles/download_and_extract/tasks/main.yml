@@ -1,17 +1,34 @@
 ---
+# usage example:
+# - name: downloads kustomize
+#   include_role:
+#     name: download_and_extract
+#   vars:
+#     download_url: "{{ kustomize_download_url }}"
+#     checksum: "{{ kustomize_download_checksum }}"
+#     path:
+#       - src: kustomize
+#         dest: ~/.local/bin/
+
+# role args
 - set_fact:
-    _filename: "{{ download_url | basename }}"
+    _download_url: "{{ download_url }}"
+    _checksum: "{{ checksum }}"
+    _path: "{{ path }}"
+
+- set_fact:
+    _filename: "{{ _download_url | basename }}"
 
 - name: ensure ~/Downloads directory
   file:
     path: "{{ ansible_env.HOME }}/Downloads"
     state: directory
 
-- name: "download {{ download_url }}"
+- name: "download {{ _filename }}"
   get_url:
-    url: "{{ download_url }}"
+    url: "{{ _download_url }}"
     dest: "{{ ansible_env.HOME }}/Downloads/{{ _filename }}"
-    checksum: "{{ checksum }}"
+    checksum: "{{ _checksum }}"
   retries: 3
   delay: 5
 
@@ -36,8 +53,10 @@
     dest: "{{ extract_dir.path }}"
     remote_src: true
   when: strip_component is undefined
-
-- name: "copy with rsync from {{ item.src }} to {{ item.dest }}"
-  shell: 'rsync -av {{ extract_dir.path }}/{{ item.src }} {{ item.dest }}'
-  loop: "{{ path }}"
+- name: "copy with rsync from {{ item2.src }} to {{ item2.dest }}"
+  ansible.builtin.shell:
+    cmd: 'rsync -av {{ extract_dir.path }}/{{ item2.src }} {{ item2.dest }}'
+  loop: "{{ _path }}"
+  loop_control:
+    loop_var: item2
   become: "{{ copy_become | default(false) }}"
