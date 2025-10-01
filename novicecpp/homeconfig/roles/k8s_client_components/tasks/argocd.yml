@@ -1,0 +1,23 @@
+- name: get checksum
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/argocd"
+    get_attributes: false
+    get_mime: false
+    get_checksum: true
+    checksum_algo: sha256
+  register: current_checksum
+
+- name: download argocd
+  ansible.builtin.get_url:
+    url: "{{ argocd_download_url }}"
+    dest: "{{ ansible_env.HOME }}/Downloads/argocd"
+    checksum: "{{ argocd_download_checksum }}"
+    mode: '0755'
+  retries: 3
+  delay: 5
+  when: not current_checksum.stat.exists or current_checksum.stat.checksum != (argocd_binary_checksum | split(':') | last)
+
+- name: export argocd bash completion
+  ansible.builtin.shell:
+    cmd: "{{ ansible_env.HOME }}/.local/bin/argocd completion bash > ~/.bash_completion.d/argocd.bash"
+    executable: /bin/bash

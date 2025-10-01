@@ -1,4 +1,13 @@
 ---
+- name: get checksum
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/helm"
+    get_attributes: false
+    get_mime: false
+    get_checksum: true
+    checksum_algo: sha256
+  register: current_checksum
+
 - name: downloads helm
   include_role:
     name: download_and_extract
@@ -8,6 +17,7 @@
     path:
       - src: linux-amd64/helm
         dest: "{{ ansible_env.HOME }}/.local/bin/"
+  when: not current_checksum.stat.exists or current_checksum.stat.checksum != (helm_binary_checksum | split(':') | last)
 
 - name: export helm bash completion
   ansible.builtin.shell:

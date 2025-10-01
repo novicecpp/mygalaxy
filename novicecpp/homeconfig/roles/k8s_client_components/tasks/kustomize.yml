@@ -1,4 +1,13 @@
 ---
+- name: get checksum
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/kustomize"
+    get_attributes: false
+    get_mime: false
+    get_checksum: true
+    checksum_algo: sha256
+  register: current_checksum
+
 - name: downloads kustomize
   include_role:
     name: download_and_extract
@@ -8,6 +17,7 @@
     path:
       - src: kustomize
         dest: ~/.local/bin/
+  when: not current_checksum.stat.exists or current_checksum.stat.checksum != (kustomize_binary_checksum | split(':') | last)
 
 - name: export kustomize bash completion
   ansible.builtin.shell:

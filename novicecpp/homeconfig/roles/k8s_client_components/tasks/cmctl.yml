@@ -1,0 +1,28 @@
+- name: get checksum
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/cmctl"
+    get_attributes: false
+    get_mime: false
+    get_checksum: true
+    checksum_algo: sha256
+  register: current_checksum
+
+- debug:
+    msg: "{{ current_checksum }}"
+
+- name: downloads cmctl
+  include_role:
+    name: download_and_extract
+  vars:
+    download_url: "{{ cmctl_download_url }}"
+    checksum: "{{ cmctl_download_checksum }}"
+    path:
+      - src: cmctl
+        dest: "{{ ansible_env.HOME }}/.local/bin/"
+  when: not current_checksum.stat.exists or current_checksum.stat.checksum != (cmctl_binary_checksum | split(':') | last)
+
+- name: export cmctl bash completion
+  ansible.builtin.shell:
+    cmd: ./cmctl completion bash > ~/.bash_completion.d/argocd.bash
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}/.local/bin"

@@ -13,7 +13,10 @@ k8s_client_downloads:
     v3.17.1:
       url: https://get.helm.sh/helm-v3.17.1-linux-amd64.tar.gz
       checksum: sha256:3b66f3cd28409f29832b1b35b43d9922959a32d795003149707fea84cbcd4469
-
+    v3.18.6:
+      url: https://get.helm.sh/helm-v3.18.6-linux-amd64.tar.gz
+      checksum: sha256:3f43c0aa57243852dd542493a0f54f1396c0bc8ec7296bbb2c01e802010819ce
+      binary_checksum: sha256:c153fd9c1173f39aefe8e9aa9f00fd3daf6b40c8ea01e94a0d2f2c1787fc60e0
   kubectl:
     v1.28.3:
       url: https://dl.k8s.io/v1.28.3/kubernetes-client-linux-amd64.tar.gz
@@ -27,7 +30,7 @@ k8s_client_downloads:
     v1.32.1:
       url: https://dl.k8s.io/v1.32.1/kubernetes-client-linux-amd64.tar.gz
       checksum: sha512:3eff144cdc8db4681fcf9b2205fa732ea7836e7878d9cc5617171970bbf80813eea45d08e1d00f6d652b6364c4a099e3e40a2a6a3ddad11a9896c73cda3118d2
-
+      binary_checksum: sha256:e16c80f1a9f94db31063477eb9e61a2e24c1a4eee09ba776b029048f5369db0c
   kubelogin:
     v1.28.0:
       url: https://github.com/int128/kubelogin/releases/download/v1.28.0/kubelogin_linux_amd64.zip
@@ -35,6 +38,7 @@ k8s_client_downloads:
     v1.34.0:
       url: https://github.com/int128/kubelogin/releases/download/v1.34.0/kubelogin_linux_amd64.zip
       checksum: sha256:9f68bd3fb1427fd12befe492a45a309bcb341d1bdff0d090052cfe3833291529
+      binary_checksum: sha256:8b7bfc36f83ad86aea63b2aa54316bc07abad12abbedd179146a4d4869aab702
   kubectx:
     v0.9.5:
       url: https://github.com/ahmetb/kubectx/archive/refs/tags/v0.9.5.tar.gz
@@ -49,33 +53,62 @@ k8s_client_downloads:
     v5.6.0:
       url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.6.0/kustomize_v5.6.0_linux_amd64.tar.gz
       checksum: sha256:54e4031ddc4e7fc59e408da29e7c646e8e57b8088c51b84b3df0864f47b5148f
-
-k8s_client_components:
-  - kubectl
-  - kubectx
-  - helm
-  - kustomize
+    v5.7.1:
+      url: https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.7.1/kustomize_v5.7.1_linux_amd64.tar.gz
+      checksum: sha256:ea375e7372f9aa029129d4b2d16c66b7750b7f1213c4f66f910d981c895818d8
+      binary_checksum: sha256:54636edecead2af90fa980cdc6a66a5ce062a1e4d694a2e36357cd73190755bb
+  argocd:
+    v3.1.8:
+      url: https://github.com/argoproj/argo-cd/releases/download/v3.1.8/argocd-linux-amd64
+      checksum: sha256:bfc45149df6dc8408cee3c1c66e865adde1439d8f419657513b56704d73f1e4d
+      binary_checksum: sha256:bfc45149df6dc8408cee3c1c66e865adde1439d8f419657513b56704d73f1e4d
+  cmctl:
+    v2.3.0:
+      url: https://github.com/cert-manager/cmctl/releases/download/v2.3.0/cmctl_linux_amd64.tar.gz
+      checksum: sha256:db0130d4b35c91f7f6f399427184f07bf950a82d107b0585bb5943aad1bd4be5
+      binary_checksum: sha256:ea41fdef6bb6009216d479efc2990c90a8525e929fcb8ce1894207be64a91da9
 
 helm_download_url: "{{ k8s_client_downloads['helm'][helm_version]['url'] }}"
 helm_download_checksum: "{{ k8s_client_downloads['helm'][helm_version]['checksum'] }}"
+helm_binary_checksum: "{{ k8s_client_downloads['helm'][helm_version]['binary_checksum'] }}"
 
 kubectl_download_url: "{{ k8s_client_downloads['kubectl'][kubectl_version]['url'] }}"
 kubectl_download_checksum: "{{ k8s_client_downloads['kubectl'][kubectl_version]['checksum'] }}"
+kubectl_binary_checksum: "{{ k8s_client_downloads['kubectl'][kubectl_version]['binary_checksum'] }}"
 
 kubelogin_download_url: "{{ k8s_client_downloads['kubelogin'][kubelogin_version]['url'] }}"
 kubelogin_download_checksum: "{{ k8s_client_downloads['kubelogin'][kubelogin_version]['checksum'] }}"
+kubelogin_binary_checksum: "{{ k8s_client_downloads['kubelogin'][kubelogin_version]['binary_checksum'] }}"
 
 kubectx_download_url: "{{ k8s_client_downloads['kubectx'][kubectx_version]['url'] }}"
 kubectx_download_checksum: "{{ k8s_client_downloads['kubectx'][kubectx_version]['checksum'] }}"
 
 kustomize_download_url: "{{ k8s_client_downloads['kustomize'][kustomize_version]['url'] }}"
 kustomize_download_checksum: "{{ k8s_client_downloads['kustomize'][kustomize_version]['checksum'] }}"
+kustomize_binary_checksum: "{{ k8s_client_downloads['kustomize'][kustomize_version]['binary_checksum'] }}"
 
+argocd_download_url: "{{ k8s_client_downloads['argocd'][argocd_version]['url'] }}"
+argocd_download_checksum: "{{ k8s_client_downloads['argocd'][argocd_version]['checksum'] }}"
+argocd_binary_checksum: "{{ k8s_client_downloads['argocd'][argocd_version]['binary_checksum'] }}"
 
-## default version
+cmctl_download_url: "{{ k8s_client_downloads['cmctl'][cmctl_version]['url'] }}"
+cmctl_download_checksum: "{{ k8s_client_downloads['cmctl'][cmctl_version]['checksum'] }}"
+cmctl_binary_checksum: "{{ k8s_client_downloads['cmctl'][cmctl_version]['binary_checksum'] }}"
 
-helm_version: v3.17.1
+k8s_client_components:
+  - kubectl
+  - kubelogin
+  - kubectx
+  - helm
+  - kustomize
+  - argocd
+  - cmctl
+
+# default version
+helm_version: v3.18.6
 kubectl_version: v1.32.1
 kubectx_version: v0.9.5
 kubelogin_version: v1.34.0
-kustomize_version: v5.6.0
+kustomize_version: v5.7.1
+argocd_version: v3.1.8
+cmctl_version: v2.3.0

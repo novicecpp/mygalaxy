@@ -1,5 +1,13 @@
+- name: get checksum
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/kubectl"
+    get_attributes: false
+    get_mime: false
+    get_checksum: true
+    checksum_algo: sha256
+  register: current_checksum
+
 - name: install kubectl
-  tags: kubectl
   include_role:
     name: download_and_extract
   vars:
@@ -8,19 +16,10 @@
     path:
       - src: kubernetes/client/bin/
         dest: "{{ ansible_env.HOME}}/.local/bin"
+  when: not current_checksum.stat.exists or current_checksum.stat.checksum != (kubectl_binary_checksum | split(':') | last)
 
 - name: export kubectl bash completion
   ansible.builtin.shell:
     cmd: "./kubectl completion bash > ~/.bash_completion.d/kubectl.bash"
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}/.local/bin"
-
-- name: install kubelogin
-  include_role:
-    name: download_and_extract
-  vars:
-    download_url: "{{ kubelogin_download_url }}"
-    checksum: "{{ kubelogin_download_checksum }}"
-    path:
-      - src: kubelogin
-        dest: "{{ ansible_env.HOME }}/.local/bin/kubectl-oidc_login"

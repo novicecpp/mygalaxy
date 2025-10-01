@@ -1,0 +1,19 @@
+- name: get checksum
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/kubectl-oidc_login"
+    get_attributes: false
+    get_mime: false
+    get_checksum: true
+    checksum_algo: sha256
+  register: current_checksum
+
+- name: install kubelogin
+  include_role:
+    name: download_and_extract
+  vars:
+    download_url: "{{ kubelogin_download_url }}"
+    checksum: "{{ kubelogin_download_checksum }}"
+    path:
+      - src: kubelogin
+        dest: "{{ ansible_env.HOME }}/.local/bin/kubectl-oidc_login"
+  when: not current_checksum.stat.exists or current_checksum.stat.checksum != (kubelogin_binary_checksum | split(':') | last)
