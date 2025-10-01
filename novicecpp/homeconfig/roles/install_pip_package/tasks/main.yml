@@ -11,7 +11,7 @@
   community.general.pipx:
     name: "{{ item }}"
     state: present
-  loop: "{{ pip_packages }}"
+  loop: "{{ pipx_packages + pipx_extras_packages }}"
 
 # wait until they release https://github.com/pypa/pipx/pull/1102 on arch
 - name: install pipx with injected packages

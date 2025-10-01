@@ -1,1 +1,3 @@
 pipx_packages_with_injects: []
+pipx_packages: []
+pipx_extra_packages: []
