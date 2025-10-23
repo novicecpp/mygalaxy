@@ -1,0 +1,24 @@
+---
+- name: get version
+  shell: yq --version | awk '{print $NF}' | sed 's/^v//g'
+  args:
+    executable: /bin/bash
+  register: cmdout
+  failed_when: "not 'command not found' in cmdout.stderr and not cmdout.stdout"
+  changed_when: false
+
+- name: mark upgrade when yq not install
+  set_fact:
+    is_upgrade: true
+  when: "'command not found' in cmdout.stderr"
+
+- name: check version if it need to upgrade
+  set_fact:
+    is_upgrade: "{{ cmdout.stdout is version(yq_version.split('v')[1], '>') }}"
+  when: "not 'command not found' in cmdout.stderr"
+- debug:
+    var: is_upgrade
+
+- name: install
+  include_tasks: install.yml
+  when: is_upgrade

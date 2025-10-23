@@ -1,0 +1,11 @@
+---
+downloads:
+  yq:
+    v4.48.1:
+      url: https://github.com/mikefarah/yq/releases/download/v4.48.1/yq_linux_amd64
+      binary_checksum: sha256:99df6047f5b577a9d25f969f7c3823ada3488de2e2115b30a0abb10d9324fd9f
+
+yq_download_url: "{{ downloads['yq'][yq_version]['url'] }}"
+yq_binary_checksum: "{{ downloads['yq'][yq_version]['binary_checksum'] }}"
+
+yq_version: v4.48.1

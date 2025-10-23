@@ -1,0 +1,11 @@
+- name: download yq
+  ansible.builtin.get_url:
+    url: "{{ yq_download_url }}"
+    dest: "/usr/local/bin/yq"
+    mode: '0755'
+    owner: root
+    group: root
+    checksum: "{{ yq_binary_checksum }}"
+  retries: 3
+  delay: 5
+  become: true
