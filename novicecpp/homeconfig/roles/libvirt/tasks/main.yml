@@ -54,4 +54,4 @@
     - libvirtd-ro.socket
     - libvirtd-admin.socket
   become: true
-  when: should_start
+  when: libvirt_should_start

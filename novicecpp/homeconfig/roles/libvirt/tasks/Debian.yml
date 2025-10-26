@@ -1,0 +1,8 @@
+---
+- ansible.builtin.include_role:
+    name: novicecpp.homeconfig.install_apt_packages
+  vars:
+    apt_packages:
+      - libvirt-daemon
+      - libvirt-clients
+    install_apt_packages_upgrade: false
