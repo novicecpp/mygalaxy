@@ -1,7 +1,7 @@
 ---
 - name: update package
   ansible.builtin.apt:
-    upgrade: true
+    upgrade: "{{ install_apt_packages_upgrade | default(true) }}"
     update_cache: true
   become: true
 
