@@ -1,0 +1,11 @@
+[Unit]
+Description=ssh-agent for %I
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/ssh-agent.sh %i
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=default.target

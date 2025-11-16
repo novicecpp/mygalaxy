@@ -1,0 +1,20 @@
+---
+- name: copy systemd unit
+  ansible.builtin.copy:
+    src: dot-config/systemd/user/ssh-agent@.service
+    dest: ~/.config/systemd/user/ssh-agent@.service
+    mode: '0644'
+
+- name: copy ssh_agent.sh to local bin
+  ansible.builtin.copy:
+    src: dot-local/bin/ssh-agent.sh
+    dest: ~/.local/bin
+    mode: '0755'
+
+- name: enable unit
+  ansible.builtin.systemd_service:
+    state: started
+    daemon_reload: true
+    name: "ssh-agent@{{ item }}.service"
+    scope: user
+  loop: "{{ ssh_agent_services }}"
