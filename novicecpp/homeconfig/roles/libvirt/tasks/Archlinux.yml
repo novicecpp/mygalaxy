@@ -17,8 +17,8 @@
   community.general.pacman:
     name:
       - cdrtools # required by libvirt terraform
-      # vim but conflict with gvim => xxd => steam
-      - gvim # for guestfish
+      #- vim # but conflict with gvim => xxd => steam
+      #- gvim # for guestfish
       - libguestfs # for guestfish
       - dnsmasq # libvirt deps
       - gnu-netcat # for virt-manager gui
