@@ -24,7 +24,7 @@ ipvalid() {
 resolvedns() {
     local endpoint_ip
     local hostname=$1
-    endpoint_ip=$(curl -s --tlsv1.3 --http2 -H "accept: application/dns-json" "https://1.1.1.1/dns-query?name=${hostname}" | jq .Answer[0].data -r)
+    endpoint_ip=$(dig +https +short @9.9.9.9 ${hostname})
     if [[ $endpoint_ip == 'null' ]]; then
         >&2 echo "Error: Domain not found: ${hostname}"
         exit 1;
@@ -32,14 +32,13 @@ resolvedns() {
     echo "${endpoint_ip}"
 }
 
-mode=${1} # `postup` or `predown`
-interface=${2} # e.g., `wg-internal`
+interface=${1} # e.g., `wg-internal`
+mode=${2} # `postup` or `predown`
 postup_mode=${3:-} # `client` or `server`
-dns_endpoint=${4:-} # wireguard.example.com:13192
+wireguard_endpoint=${4:-} # wireguard.example.com:13192
 
-
-hostname=$(echo "${dns_endpoint}" | cut -d: -f1)
-port=$(echo "${dns_endpoint}" | cut -d: -f2)
+hostname=$(echo "${wireguard_endpoint}" | cut -d: -f1)
+port=$(echo "${wireguard_endpoint}" | cut -d: -f2)
 configdir=/etc/wireguard/${interface}.d
 POSTUP_SH="${configdir}/postup.sh"
 PREDOWN_SH="${configdir}/predown.sh"
@@ -56,6 +55,10 @@ if [[ ${mode} == 'postup' ]]; then
 
         # peer pubkey required by wg set command
         wg set "${interface}" peer "$(cat "${configdir}"/peer.pub)" endpoint "${endpoint}"
+    elif  [[ ${postup_mode} == server ]]; then
+	    :
+    else
+	>&2 echo "Error: unrecognize post-up mode \"${mode}\""
     fi
     wg set "${interface}" private-key <(cat "${configdir}/${interface}.key");
 
@@ -64,14 +67,14 @@ if [[ ${mode} == 'postup' ]]; then
     if [[ -f $POSTUP_SH ]]; then
         bash ${POSTUP_SH} ${interface}
     else
-        >&2 echo "Warning: Post up scripts does not exists: ${POSTUP_SH}"
+	>&2 echo "Postup script does not exists: ${PREDOWN_SH}. Do nothing."
     fi
 elif [[ ${mode} == 'predown' ]]; then
-
+    resolvectl revert ${interface}
     if [[ -f $PREDOWN_SH ]]; then
         bash ${PREDOWN_SH} ${interface}
     else
-        >&2 echo "Warning: Predown up scripts does not exists: ${PREDOWN_SH}"
+        >&2 echo "Predown script does not exists: ${PREDOWN_SH}. Do nothing."
     fi
 else
     >&2 echo "Error: unrecognize mode \"${mode}\""
