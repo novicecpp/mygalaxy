@@ -35,7 +35,7 @@
 
 - name: copy wireguard private key
   ansible.builtin.copy:
-    content: "{{ lookup('community.general.passwordstore', wg_pass_abs_path) }}"
+    content: "{{ lookup('community.general.passwordstore', wg_pass_abs_path ~ '.key') }}"
     dest: /etc/wireguard/{{ wg_interface }}.d/{{ wg_interface }}.key
     mode: '0600'
     owner: root
@@ -43,15 +43,15 @@
   notify: restart wireguard
   become: true
 
-#- name: copy wireguard public key
-#  ansible.builtin.copy:
-#    src: "{{ wg_keys_dir }}/{{ item }}/{{ wg_interface }}.pub"
-#    dest: "/etc/wireguard/peers/{{ item }}.pub"
-#    mode: '0600'
-#    owner: root
-#    group: root
-#  become: true
-#  loop: "{{ wg_peer_names }}"
+- name: copy wireguard public key
+  ansible.builtin.copy:
+    content: "{{ lookup('community.general.passwordstore', wg_pass_abs_path ~ '.pub') }}"
+    dest: /etc/wireguard/{{ wg_interface }}.d/{{ wg_interface }}.pub
+    mode: '0600'
+    owner: root
+    group: root
+  become: true
+  notify: restart wireguard
 
 - name: copy postup/predown
   ansible.builtin.copy:
@@ -65,10 +65,6 @@
   loop:
     - postup.sh
     - predown.sh
-
-
-- name: per mode
-  include_tasks: "{{ mode }}.yml"
 
 - name: enable wireguard
   ansible.builtin.systemd:
