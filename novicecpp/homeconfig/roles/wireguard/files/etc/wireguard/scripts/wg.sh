@@ -32,6 +32,11 @@ resolvedns() {
     echo "${endpoint_ip}"
 }
 
+get_peer() {
+    confpath=${1}
+    echo $(grep -E 'PublicKey = ' "${confpath}" | head -1 | awk '{print $3}')
+}
+
 interface=${1} # e.g., `wg-internal`
 mode=${2} # `postup` or `predown`
 postup_mode=${3:-} # `client` or `server`
@@ -52,9 +57,8 @@ if [[ ${mode} == 'postup' ]]; then
             endpoint_hostname=$(resolvedns "${hostname}")
         fi
         endpoint=${endpoint_hostname}:${port}
-
-        # peer pubkey required by wg set command
-        wg set "${interface}" peer "$(cat "${configdir}"/peer.pub)" endpoint "${endpoint}"
+        # peer pubkey required by set endpoint command
+        wg set "${interface}" peer "$(get_peer "${configdir}/../${interface}.conf")" endpoint "${endpoint}"
     elif  [[ ${postup_mode} == server ]]; then
 	    :
     else
