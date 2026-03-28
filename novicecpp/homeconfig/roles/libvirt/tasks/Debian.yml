@@ -5,4 +5,9 @@
     apt_packages:
       - libvirt-daemon
       - libvirt-clients
+      # python binding for ansible
+      - python3-libvirt
+      - python3-lxml
+      # cloud-localds command
+      - cloud-image-utils
     install_apt_packages_upgrade: false
