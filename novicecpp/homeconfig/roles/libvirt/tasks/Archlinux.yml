@@ -1,5 +1,6 @@
 ---
 # conflicts (also dependencies) packages
+# debs
 - community.general.pacman:
     name: "openbsd-netcat"
     state: absent
@@ -16,13 +17,14 @@
 - name: install libvirt dependency
   community.general.pacman:
     name:
-      - cdrtools # required by libvirt terraform
+      # - cdrtools # required by libvirt terraform
       #- vim # but conflict with gvim => xxd => steam
       #- gvim # for guestfish
       - libguestfs # for guestfish
       - dnsmasq # libvirt deps
       - gnu-netcat # for virt-manager gui
       - libxml2 # xmllint in network hook
+      - cloud-image-utils # cloud-localds
     state: present
     reason: explicit
     reason_for: all
