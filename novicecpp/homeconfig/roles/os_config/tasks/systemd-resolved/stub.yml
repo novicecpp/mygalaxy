@@ -1,0 +1,16 @@
+- name: symlink stub-resolv.conf
+  ansible.builtin.file:
+    src: /run/systemd/resolve/stub-resolv.conf
+    dest: /etc/resolv.conf
+    force: true
+    state: link
+  notify: restart systemd-resolved
+  become: true
+
+- name: copy default config
+  ansible.builtin.copy:
+    src: systemd-resolved/stub/etc/systemd/resolved.conf
+    dest: /etc/systemd/resolved.conf
+    mode: '0644'
+  notify: restart systemd-resolved
+  become: true
