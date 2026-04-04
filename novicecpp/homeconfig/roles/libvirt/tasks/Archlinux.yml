@@ -1,19 +1,4 @@
 ---
-# conflicts (also dependencies) packages
-# debs
-- community.general.pacman:
-    name: "openbsd-netcat"
-    state: absent
-    force: true
-  become: true
-
-- community.general.pacman:
-    name: "gnu-netcat"
-    state: present
-    reason: explicit
-    reason_for: all
-  become: true
-
 - name: install libvirt dependency
   community.general.pacman:
     name:
@@ -22,7 +7,7 @@
       #- gvim # for guestfish
       - libguestfs # for guestfish
       - dnsmasq # libvirt deps
-      - gnu-netcat # for virt-manager gui
+      - openbsd-netcat # for virt-manager gui
       - libxml2 # xmllint in network hook
       - cloud-image-utils # cloud-localds
     state: present
