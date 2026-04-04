@@ -1,1 +1,2 @@
+os_config_apply_configs: []
 os_config_systemd_resolved_mode: legacy-ipv6

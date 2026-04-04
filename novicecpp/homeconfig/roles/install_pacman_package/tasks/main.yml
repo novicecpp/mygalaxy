@@ -44,65 +44,6 @@
     upgrade_extra_args: --ask 4
   become: true
 
-- name: copy makepkg config for build aur package
-  ansible.builtin.copy:
-    src: etc/makepkg.conf
-    dest: /etc/makepkg.conf
-    mode: '0644'
-    owner: root
-    group: root
-  become: true
-
-- name: Create the `aur_builder` user
-  ansible.builtin.user:
-    name: aur_builder
-    create_home: yes
-  become: true
-
-- name: Allow the `aur_builder` user to run `sudo pacman` without a password
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers.d/11-install-aur_builder
-    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
-    create: yes
-    mode: '0644'
-    validate: 'visudo -cf %s'
-  become: true
-
-- name: pacman install yay deps
-  community.general.pacman:
-    name:
-      - fakeroot
-    state: present
-  become: true
-
-- name: Install yay
-  kewlfft.aur.aur:
-    name: yay
-    use: makepkg
-    state: latest
-    aur_only: true
-  become: true
-  become_user: aur_builder
-
-# disable upgrade all aur.
-# some aur (in this case, gct) are manual installed. it is not properly test and break while build.
-#- name: Upgrade the system using yay, only act on AUR packages.
-#  kewlfft.aur.aur:
-#    upgrade: true
-#    update_cache: true
-#    use: yay
-#    aur_only: true
-
-# install always upgrade to latest
-
-- name: install aur packages
-  kewlfft.aur.aur:
-    use: yay
-    name: "{{ aur_packages + aur_extra_packages }}"
-    state: latest
-  become: true
-  become_user: aur_builder
-  when: aur_packages | length > 0
-
-- import_tasks: private_aur.yml
-  when: private_aur_packages | length > 0
+- name: install aur and packages
+  ansible.builtin.include_tasks: aur.yml
+  when: pacman_install_aur

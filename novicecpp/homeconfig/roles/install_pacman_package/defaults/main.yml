@@ -9,3 +9,7 @@ aur_packages:
 aur_extra_packages: []
 private_aur_packages: []
 private_aur_repository: ""
+
+pacman_pacstrap_packages: []
+
+pacman_install_aur: false
