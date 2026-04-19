@@ -1,6 +1,0 @@
----
-- name: install wireguard-tools
-  ansible.builtin.apt:
-    name: wireguard-tools
-    state: latest
-    update_cache: true
