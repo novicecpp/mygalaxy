@@ -39,6 +39,14 @@
     state: present
   become: true
 
+- name: ensure local applications dir exists
+  ansible.builtin.copy:
+    path: '{{ ansible_user_dir }}/.local/share/applications
+    state: directory
+    mode: '0755'
+    owner: {{ ansible_user_uid }}
+    group: {{ ansible_user_gid }}
+
 - name: copy desktop file
   ansible.builtin.copy:
     src: '{{ tmpdir.path }}/assets/noisetorch.desktop'
