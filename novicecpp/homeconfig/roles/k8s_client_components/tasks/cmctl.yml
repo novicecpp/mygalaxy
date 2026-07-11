@@ -23,6 +23,6 @@
 
 - name: export cmctl bash completion
   ansible.builtin.shell:
-    cmd: ./cmctl completion bash > ~/.bash_completion.d/argocd.bash
+    cmd: ./cmctl completion bash > ~/.bash_completion.d/cmctl.bash
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}/.local/bin"

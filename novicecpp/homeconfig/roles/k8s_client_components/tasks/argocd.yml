@@ -7,15 +7,23 @@
     checksum_algo: sha256
   register: current_checksum
 
-- name: download argocd
-  ansible.builtin.get_url:
-    url: "{{ argocd_download_url }}"
-    dest: "{{ ansible_env.HOME }}/Downloads/argocd"
-    checksum: "{{ argocd_download_checksum }}"
-    mode: '0755'
-  retries: 3
-  delay: 5
-  when: not current_checksum.stat.exists or current_checksum.stat.checksum != (argocd_binary_checksum | split(':') | last)
+- when: not current_checksum.stat.exists or current_checksum.stat.checksum != (argocd_binary_checksum | split(':') | last)
+  block:
+    - name: download argocd
+      ansible.builtin.get_url:
+        url: "{{ argocd_download_url }}"
+        dest: "{{ ansible_env.HOME }}/Downloads/argocd"
+        checksum: "{{ argocd_download_checksum }}"
+        mode: '0755'
+      retries: 3
+      delay: 5
+    - name: copy binary to .local/bin
+      ansible.builtin.copy:
+        src: "{{ ansible_env.HOME }}/Downloads/argocd"
+        dest: "{{ ansible_env.HOME }}/.local/bin/argocd"
+        owner: "{{ ansible_user_uid }}"
+        group: "{{ ansible_user_gid }}"
+        mode: '0755'
 
 - name: export argocd bash completion
   ansible.builtin.shell:
