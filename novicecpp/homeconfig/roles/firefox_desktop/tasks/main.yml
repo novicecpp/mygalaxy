@@ -1,4 +1,12 @@
 ---
+- name: ensure local applications dir exists
+  ansible.builtin.file:
+    path: '{{ ansible_user_dir }}/.local/share/applications'
+    state: directory
+    mode: '0755'
+    owner: '{{ ansible_user_uid }}'
+    group: '{{ ansible_user_gid }}'
+
 - name: copy original firefox desktop
   ansible.builtin.copy:
     src: /usr/share/applications/firefox.desktop
