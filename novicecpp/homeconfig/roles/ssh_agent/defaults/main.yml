@@ -1,2 +1,2 @@
 ssh_agent_services:
-  - user
+  - main
