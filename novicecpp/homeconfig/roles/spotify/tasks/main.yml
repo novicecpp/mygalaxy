@@ -11,6 +11,16 @@
 #  become: true
 #  become_user: aur_builder
 
+- name: install runtime deps
+  community.general.pacman:
+    name:
+      - ffmpeg4.4
+      - zenity
+    reason: explicit
+    reason_for: all
+    state: present
+  become: true
+
 - name: install aur packages
   kewlfft.aur.aur:
     use: yay
