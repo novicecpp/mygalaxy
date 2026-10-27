@@ -28,3 +28,12 @@
     state: latest
   become: true
   become_user: aur_builder
+
+- name: set default flags to force wayland mode and make fcitx work
+  ansible.builtin.copy:
+    content: |-
+      --ozone-platform=wayland
+      --enable-features=UseOzonePlatform
+      --enable-wayland-ime
+    dest: "{{ ansible_user_dir }}/.config/spotify-flags.conf"
+  become: false
