@@ -24,6 +24,11 @@
         dest: /opt/{{ coredns_appname }}/bin
     copy_become: true
 
+- name: ensure /etc/logrotate.d
+  ansible.builtin.file:
+    path: /etc/logrotate.d
+    state: directory
+
 - name: copy deployment config
   ansible.builtin.template:
     src: "{{ item.src }}"

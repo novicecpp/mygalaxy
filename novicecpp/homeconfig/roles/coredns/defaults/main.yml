@@ -9,11 +9,15 @@ coredns_downloads:
       url: https://github.com/coredns/coredns/releases/download/v1.11.3/coredns_1.11.3_linux_amd64.tgz
       checksum: sha256:6af4d6a5412734417378f778343c4fba363a61ae027060675123d4296f5a8ee5
       bin_checksum: 7a2d00cc8a9a8751d7c5c00a4e83e224e517ab4522fa59a4be4a2f594287d0c3
+    v1.14.7:
+      url: https://github.com/coredns/coredns/releases/download/v1.14.7/coredns_1.14.7_linux_amd64.tgz
+      checksum: sha256:9a09356438c6d9591cb80011a2a7a52f87fc3a113f6690e41f243f98b98faac9
+      bin_checksum: 67d7387acb5d58df2c884cd2f0a4a4815f6a6bb29b865a6ea5efa4e782d76faa
   deployment:
     d222a8e4781d707b29a9e4da26e04e75d3fa678b:
       url: https://github.com/coredns/deployment/
 
-coredns_version: v1.11.3
+coredns_version: v1.14.7
 coredns_download_url: "{{ coredns_downloads['coredns'][coredns_version]['url'] }}"
 coredns_download_checksum: "{{ coredns_downloads['coredns'][coredns_version]['checksum'] }}"
 coredns_bin_checksum: "{{ coredns_downloads['coredns'][coredns_version]['bin_checksum'] }}"
@@ -22,5 +26,5 @@ coredns_deployment_version: d222a8e4781d707b29a9e4da26e04e75d3fa678b
 coredns_deployment_download_url: "{{ coredns_downloads['deployment'][coredns_deployment_version]['url'] }}"
 
 coredns_appname: coredns
-coredns_config_path: "{{ inventory_hostname ~ '/etc/coredns/' }}"
+#coredns_config_path: "{{ lookup('ansible.builtin.first_found', [inventory_hostname ~ '/etc/coredns/', ]) }}"
 coredns_dns_stub_mode: false

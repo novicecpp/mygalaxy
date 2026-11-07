@@ -19,7 +19,7 @@
 
 - name: copy coredns config
   ansible.builtin.copy:
-    src: "{{ coredns_config_path }}"
+    src: etc/coredns/ #"{{ coredns_config_path }}"
     dest: "/etc/{{ coredns_appname }}/"
     owner: root
     group: root
